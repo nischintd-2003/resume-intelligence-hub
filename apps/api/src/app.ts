@@ -1,6 +1,9 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import swaggerUi from 'swagger-ui-express';
+import path from 'path';
+import YAML from 'yamljs';
 import authRoutes from './routes/auth.routes';
 import { errorHandler } from './middlewares/errorHandler';
 import { requireAuth } from './middlewares/requireAuth';
@@ -11,6 +14,9 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+const swaggerPath = path.resolve(__dirname, './docs/swagger.yaml');
+const swaggerDocument = YAML.load(swaggerPath);
+
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
@@ -20,6 +26,7 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/api/protected', requireAuth, (req, res) => {
   res.status(200).json({ status: 'success', user: req.user });
