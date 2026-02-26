@@ -8,16 +8,19 @@ export class User extends Model {
   declare id: string;
 
   @Column({ type: DataType.STRING, allowNull: false, unique: true })
-  email!: string;
+  declare username: string;
+
+  @Column({ type: DataType.STRING, allowNull: false, unique: true })
+  declare email: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  passwordHash!: string;
+  declare passwordHash: string;
 
   @HasMany(() => ParsedResume)
-  resumes!: ParsedResume[];
+  declare resumes: ParsedResume[];
 
   @HasMany(() => JobRole)
-  jobRoles!: JobRole[];
+  declare jobRoles: JobRole[];
 
   @CreatedAt
   @Column(DataType.DATE)

@@ -1,7 +1,8 @@
 import * as dotenv from 'dotenv';
+import * as path from 'path';
 import { z } from 'zod';
 
-dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
 
 const EnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
@@ -34,8 +35,7 @@ const EnvSchema = z.object({
 const parsedEnv = EnvSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
-  console.error('FATAL: Invalid environment variables detected at startup:');
-  console.error(JSON.stringify(parsedEnv.error.flatten().fieldErrors, null, 2));
+  console.error(' Invalid environment variables', z.flattenError(parsedEnv.error));
   process.exit(1);
 }
 

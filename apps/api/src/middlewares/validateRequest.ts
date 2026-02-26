@@ -13,8 +13,18 @@ export const validate = (schema: ZodSchema) => {
       const result = validatedData as { body?: any; query?: any; params?: any };
 
       req.body = result.body;
-      req.query = result.query as any;
-      req.params = result.params as any;
+
+      Object.defineProperty(req, 'query', {
+        value: result.query,
+        configurable: true,
+        writable: true,
+      });
+
+      Object.defineProperty(req, 'params', {
+        value: result.params,
+        configurable: true,
+        writable: true,
+      });
 
       next();
     } catch (error) {
