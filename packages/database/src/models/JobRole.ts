@@ -16,16 +16,16 @@ export class JobRole extends Model {
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false })
-  userId!: string;
+  declare userId: string;
 
   @BelongsTo(() => User)
-  uploadedBy!: User;
+  declare uploadedBy: User;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  title!: string;
+  declare title: string;
 
   @Column({ type: DataType.JSONB, allowNull: false })
-  requiredSkills!: string[];
+  declare requiredSkills: string[];
 
   @CreatedAt
   @Column(DataType.DATE)
