@@ -1,4 +1,12 @@
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+  CreatedAt,
+} from 'sequelize-typescript';
 import { User } from './User';
 
 @Table({ tableName: 'job_roles', timestamps: true })
@@ -18,4 +26,8 @@ export class JobRole extends Model {
 
   @Column({ type: DataType.JSONB, allowNull: false })
   requiredSkills!: string[];
+
+  @CreatedAt
+  @Column(DataType.DATE)
+  declare createdAt: Date;
 }

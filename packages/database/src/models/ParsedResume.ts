@@ -6,6 +6,7 @@ import {
   Default,
   ForeignKey,
   BelongsTo,
+  CreatedAt,
 } from 'sequelize-typescript';
 import { User } from './User';
 
@@ -40,4 +41,8 @@ export class ParsedResume extends Model {
 
   @Column({ type: DataType.JSONB, allowNull: true })
   extractedData!: ExtractedResumeData;
+
+  @CreatedAt
+  @Column(DataType.DATE)
+  declare createdAt: Date;
 }

@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany, CreatedAt } from 'sequelize-typescript';
 import { ParsedResume } from './ParsedResume';
 import { JobRole } from './JobRole';
 
@@ -18,4 +18,8 @@ export class User extends Model {
 
   @HasMany(() => JobRole)
   jobRoles!: JobRole[];
+
+  @CreatedAt
+  @Column(DataType.DATE)
+  declare createdAt: Date;
 }
