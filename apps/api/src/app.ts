@@ -7,6 +7,7 @@ import YAML from 'yamljs';
 import authRoutes from './routes/auth.routes';
 import { errorHandler } from './middlewares/errorHandler';
 import { requireAuth } from './middlewares/requireAuth';
+import resumeRoutes from './routes/resume.routes';
 
 const app: Application = express();
 
@@ -27,6 +28,7 @@ app.get('/health', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api/resumes', resumeRoutes);
 
 app.get('/api/protected', requireAuth, (req, res) => {
   res.status(200).json({ status: 'success', user: req.user });
