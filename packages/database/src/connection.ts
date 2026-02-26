@@ -3,6 +3,7 @@ import { config } from '@resume-hub/config';
 import { logger } from '@resume-hub/logger';
 import { ParsedResume } from './models/ParsedResume';
 import { JobRole } from './models/JobRole';
+import { User } from './models/User';
 
 export const sequelize = new Sequelize({
   database: config.database.database,
@@ -11,7 +12,7 @@ export const sequelize = new Sequelize({
   host: config.database.host,
   port: config.database.port,
   dialect: 'postgres',
-  models: [ParsedResume, JobRole],
+  models: [User, ParsedResume, JobRole],
   logging: (msg) => logger.debug(msg),
   pool: {
     max: config.database.poolMax,
@@ -24,7 +25,7 @@ export const sequelize = new Sequelize({
 export const initDatabase = async () => {
   try {
     await sequelize.authenticate();
-    logger.info('PostgreSQL connected successfully via Sequelize.');
+    logger.info('PostgreSQL connected successfully');
     await sequelize.sync({ alter: true });
   } catch (error) {
     logger.error('Unable to connect to PostgreSQL:', error);

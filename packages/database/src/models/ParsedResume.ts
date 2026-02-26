@@ -1,4 +1,13 @@
-import { Table, Column, Model, DataType, Default } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  Default,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
+import { User } from './User';
 
 export interface ExtractedResumeData {
   skills?: string[];
@@ -11,6 +20,13 @@ export interface ExtractedResumeData {
 export class ParsedResume extends Model {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
   declare id: string;
+
+  @ForeignKey(() => User)
+  @Column({ type: DataType.UUID, allowNull: false })
+  userId!: string;
+
+  @BelongsTo(() => User)
+  uploadedBy!: User;
 
   @Column({ type: DataType.STRING, allowNull: false })
   minioPath!: string;
