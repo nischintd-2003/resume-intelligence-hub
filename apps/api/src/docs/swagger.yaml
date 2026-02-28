@@ -47,6 +47,20 @@ components:
           createdAt:
             type: string
             format: date-time              
+    JobResponse:
+          type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            requiredSkills:
+              type: array
+              items:
+                type: string
+            createdAt:
+              type: string
+              format: date-time
 
 paths:
   /health:
@@ -215,3 +229,96 @@ paths:
           description: Resume not found or access denied
         '401':
           description: Unauthorized
+  /api/jobs:
+      post:
+        summary: Create a target job role
+        tags:
+          - Jobs
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - title
+                  - requiredSkills
+                properties:
+                  title:
+                    type: string
+                    example: Senior Fullstack Engineer
+                  requiredSkills:
+                    type: array
+                    items:
+                      type: string
+                    example: ["Node.js", "React", "TypeScript", "PostgreSQL"]
+        responses:
+          '201':
+            description: Job created
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: success
+                    data:
+                      $ref: '#/components/schemas/JobResponse'
+          '401':
+            description: Unauthorized
+          '400':
+            description: Validation Error
+
+      get:
+        summary: Get all jobs for current user
+        tags:
+          - Jobs
+        security:
+          - bearerAuth: []
+        responses:
+          '200':
+            description: List of jobs
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: success
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/JobResponse'
+
+  /api/jobs/{id}:
+    get:
+      summary: Get a specific job
+      tags:
+        - Jobs
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Job details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    $ref: '#/components/schemas/JobResponse'
+        '404':
+          description: Job not found or access denied
