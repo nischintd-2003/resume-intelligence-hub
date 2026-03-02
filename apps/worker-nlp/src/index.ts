@@ -2,6 +2,7 @@ import { createWorker, QUEUES, StructureDataJob } from '@resume-hub/queue-lib';
 import { initDatabase, ParsedResume } from '@resume-hub/database';
 import { logger } from '@resume-hub/logger';
 import { extractStructuredData } from './utils/nlp';
+import { matchQueue } from '@resume-hub/queue-lib';
 
 const startNlpWorker = async () => {
   try {
@@ -37,6 +38,13 @@ const startNlpWorker = async () => {
       logger.info(
         `[Job ${jobId}] Database updated. Resume ${job.data.resumeId} status is now 'parsed'.`,
       );
+
+      await matchQueue.add('calculate-math', {
+        resumeId: job.data.resumeId,
+        userId: job.data.userId,
+      });
+
+      logger.info(`[Job ${jobId}] Fired Match event for Resume ${job.data.resumeId}`);
     });
 
     logger.info(' NLP Worker started (using compromise+chrono) and listening to "nlp-queue"');
