@@ -24,23 +24,23 @@ export class ParsedResume extends Model {
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false })
-  userId!: string;
+  declare userId: string;
 
   @BelongsTo(() => User)
-  uploadedBy!: User;
+  declare uploadedBy: User;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  minioPath!: string;
+  declare minioPath: string;
 
   @Default('uploaded')
   @Column({
     type: DataType.ENUM('uploaded', 'extracted', 'parsed', 'failed'),
     allowNull: false,
   })
-  status!: string;
+  declare status: string;
 
   @Column({ type: DataType.JSONB, allowNull: true })
-  extractedData!: ExtractedResumeData;
+  declare extractedData: ExtractedResumeData;
 
   @CreatedAt
   @Column(DataType.DATE)
