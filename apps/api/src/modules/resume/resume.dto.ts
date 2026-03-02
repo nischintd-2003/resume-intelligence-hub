@@ -12,5 +12,6 @@ export type ResumeResponseDTO = {
   id: string;
   minioPath: string;
   status: string;
+  extractedData?: any;
   createdAt: Date;
 };

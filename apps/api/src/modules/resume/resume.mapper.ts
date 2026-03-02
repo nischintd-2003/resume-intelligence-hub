@@ -6,6 +6,7 @@ export const toResumeResponse = (resume: ParsedResume): ResumeResponseDTO => {
     id: resume.id,
     minioPath: resume.minioPath,
     status: resume.status,
+    extractedData: resume.extractedData,
     createdAt: resume.createdAt,
   };
 };
