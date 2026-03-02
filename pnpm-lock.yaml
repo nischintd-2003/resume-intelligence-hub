@@ -115,6 +115,34 @@ importers:
         specifier: ^4.0.18
         version: 4.0.18(@types/node@22.15.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2)
 
+  apps/worker-insights:
+    dependencies:
+      '@resume-hub/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@resume-hub/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@resume-hub/logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
+      '@resume-hub/queue-lib':
+        specifier: workspace:*
+        version: link:../../packages/queue-lib
+      bullmq:
+        specifier: ^5.7.8
+        version: 5.70.1
+      ioredis:
+        specifier: 5.9.3
+        version: 5.9.3
+    devDependencies:
+      ts-node-dev:
+        specifier: ^2.0.0
+        version: 2.0.0(@types/node@22.15.3)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   apps/worker-match:
     dependencies:
       '@resume-hub/config':
