@@ -30,4 +30,7 @@ export class JobRole extends Model {
   @CreatedAt
   @Column(DataType.DATE)
   declare createdAt: Date;
+
+  @Column({ type: DataType.BOOLEAN, defaultValue: true })
+  declare isActive: boolean;
 }
