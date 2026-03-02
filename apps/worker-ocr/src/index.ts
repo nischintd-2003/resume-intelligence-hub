@@ -2,6 +2,7 @@ import { createWorker, QUEUES, ExtractTextJob } from '@resume-hub/queue-lib';
 import { initDatabase } from '@resume-hub/database';
 import { logger } from '@resume-hub/logger';
 import { downloadResumeBuffer } from './utils/storage';
+import { detectFileType } from './utils/inspector';
 
 const startOcrWorker = async () => {
   try {
@@ -16,6 +17,13 @@ const startOcrWorker = async () => {
       logger.info(
         `[Job ${job.id}] Successfully downloaded file. Buffer Size: ${fileBuffer.length} bytes`,
       );
+
+      const fileType = await detectFileType(fileBuffer);
+      logger.info(`[Job ${job.id}] Cryptographic File Type Detected: ${fileType}`);
+
+      if (fileType === 'unsupported') {
+        throw new Error('Unsupported file format. Cannot parse text.');
+      }
     });
 
     logger.info('OCR Worker started and listening to "ocr-queue"');
