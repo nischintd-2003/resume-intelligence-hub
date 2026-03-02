@@ -1,3 +1,6 @@
+import { ocrQueue } from '@resume-hub/queue-lib';
+import { config } from '@resume-hub/config';
+import { logger } from '@resume-hub/logger';
 import * as resumeRepo from './resume.repository';
 import { AppError } from '../../utils/AppError';
 import { CreateResumeInput, ResumeResponseDTO } from './resume.dto';
@@ -8,6 +11,25 @@ export const uploadResumeRecord = async (
   input: CreateResumeInput,
 ): Promise<ResumeResponseDTO> => {
   const resume = await resumeRepo.createResumeRecord(userId, input.minioPath);
+
+  try {
+    await ocrQueue.add(
+      'extract-text',
+      {
+        resumeId: resume.id,
+        userId: userId,
+        minioPath: resume.minioPath,
+      },
+      {
+        attempts: config.queue.attempts,
+        backoff: { type: 'exponential', delay: config.queue.backoffDelay },
+      },
+    );
+
+    logger.info(`Successfully queued resume ${resume.id} to ocr-queue`);
+  } catch (error) {
+    logger.error(`Failed to queue resume ${resume.id}:`, error);
+  }
 
   return toResumeResponse(resume);
 };

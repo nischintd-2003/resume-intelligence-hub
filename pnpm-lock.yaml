@@ -50,6 +50,9 @@ importers:
       '@resume-hub/logger':
         specifier: workspace:*
         version: link:../../packages/logger
+      '@resume-hub/queue-lib':
+        specifier: workspace:*
+        version: link:../../packages/queue-lib
       bcrypt:
         specifier: ^6.0.0
         version: 6.0.0
@@ -111,6 +114,34 @@ importers:
       vitest:
         specifier: ^4.0.18
         version: 4.0.18(@types/node@22.15.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.2)
+
+  apps/worker-ocr:
+    dependencies:
+      '@resume-hub/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@resume-hub/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@resume-hub/logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
+      '@resume-hub/queue-lib':
+        specifier: workspace:*
+        version: link:../../packages/queue-lib
+      bullmq:
+        specifier: ^5.7.8
+        version: 5.70.1
+      ioredis:
+        specifier: 5.9.3
+        version: 5.9.3
+    devDependencies:
+      ts-node-dev:
+        specifier: ^2.0.0
+        version: 2.0.0(@types/node@22.15.3)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
 
   packages/config:
     dependencies:
@@ -2620,7 +2651,7 @@ snapshots:
   '@commitlint/is-ignored@20.4.1':
     dependencies:
       '@commitlint/types': 20.4.0
-      semver: 7.7.3
+      semver: 7.7.4
 
   '@commitlint/lint@20.4.2':
     dependencies:
@@ -3123,7 +3154,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.56.1
       debug: 4.4.3
       minimatch: 10.2.3
-      semver: 7.7.3
+      semver: 7.7.4
       tinyglobby: 0.2.15
       ts-api-utils: 2.4.0(typescript@5.9.2)
       typescript: 5.9.2

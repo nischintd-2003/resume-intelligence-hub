@@ -41,3 +41,5 @@ export const createWorker = <T>(
 
   return worker;
 };
+
+export { QUEUES, CalculateMatchJob, ExtractTextJob, GenerateInsightsJob, StructureDataJob };
