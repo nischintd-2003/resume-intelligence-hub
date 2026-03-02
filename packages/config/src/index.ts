@@ -19,8 +19,14 @@ const EnvSchema = z.object({
   REDIS_HOST: z.string().default('localhost'),
   REDIS_PORT: z.coerce.number().default(6379),
 
-  // TUS / MinIO
+  // TUS
   TUS_ENDPOINT: z.string().default('http://localhost:1080/files/'),
+
+  // MinIO
+  MINIO_ROOT_USER: z.string().default('admin'),
+  MINIO_ROOT_PASSWORD: z.string().default('password'),
+  MINIO_ENDPOINT: z.string().default('http://localhost:9000'),
+  MINIO_BUCKET_NAME: z.string().default('resumes'),
 
   // Queue settings
   QUEUE_CONCURRENCY: z.coerce.number().default(5),
@@ -57,6 +63,12 @@ export const config = {
   },
   tus: {
     endpoint: env.TUS_ENDPOINT,
+  },
+  minio: {
+    accessKey: env.MINIO_ROOT_USER,
+    secretKey: env.MINIO_ROOT_PASSWORD,
+    endpoint: env.MINIO_ENDPOINT,
+    bucket: env.MINIO_BUCKET_NAME,
   },
   queue: {
     concurrency: env.QUEUE_CONCURRENCY,
