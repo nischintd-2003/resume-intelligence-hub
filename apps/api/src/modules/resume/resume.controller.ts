@@ -23,3 +23,10 @@ export const getResume = async (req: Request<{ id: string }>, res: Response) => 
   const result = await resumeService.getResumeById(userId, resumeId);
   res.status(200).json({ status: 'success', data: result });
 };
+
+export const getMatches = async (req: Request<{ id: string }>, res: Response) => {
+  const userId = req.user!.id;
+  const resumeId = req.params.id;
+  const result = await resumeService.getResumeMatches(userId, resumeId);
+  res.status(200).json({ status: 'success', data: result });
+};

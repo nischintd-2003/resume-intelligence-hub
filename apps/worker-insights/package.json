@@ -1,0 +1,24 @@
+{
+  "name": "worker-insights",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@resume-hub/config": "workspace:*",
+    "@resume-hub/database": "workspace:*",
+    "@resume-hub/logger": "workspace:*",
+    "@resume-hub/queue-lib": "workspace:*",
+    "bullmq": "^5.7.8",
+    "sequelize": "^6.35.0",
+    "ioredis": "5.9.3"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}

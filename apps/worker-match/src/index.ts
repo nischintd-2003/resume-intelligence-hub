@@ -1,4 +1,4 @@
-import { createWorker, QUEUES, CalculateMatchJob } from '@resume-hub/queue-lib';
+import { createWorker, QUEUES, CalculateMatchJob, insightsQueue } from '@resume-hub/queue-lib';
 import { initDatabase, ParsedResume, JobRole, MatchResult } from '@resume-hub/database';
 import { logger } from '@resume-hub/logger';
 
@@ -55,6 +55,13 @@ const startMatchWorker = async () => {
       }
 
       logger.info(`[Job ${job.id}] Successfully matched resume against all active jobs.`);
+
+      await insightsQueue.add('generate-insights', {
+        resumeId,
+        userId,
+      });
+
+      logger.info(`[Job ${job.id}] Fired Insights event`);
     });
 
     logger.info('Match Engine started and listening to "match-queue"');

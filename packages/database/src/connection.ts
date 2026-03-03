@@ -5,6 +5,7 @@ import { ParsedResume } from './models/ParsedResume';
 import { JobRole } from './models/JobRole';
 import { User } from './models/User';
 import { MatchResult } from './models/MatchResults';
+import { DashboardAnalytics } from './models/DashboardAnalytics';
 
 export const sequelize = new Sequelize({
   database: config.database.database,
@@ -13,7 +14,7 @@ export const sequelize = new Sequelize({
   host: config.database.host,
   port: config.database.port,
   dialect: 'postgres',
-  models: [User, ParsedResume, JobRole, MatchResult],
+  models: [User, ParsedResume, JobRole, MatchResult, DashboardAnalytics],
   logging: (msg) => logger.debug(msg),
   pool: {
     max: config.database.poolMax,

@@ -107,4 +107,39 @@ describe('Resume Module Integration', () => {
       expect(response.body.data.id).toBe(mockResumeId);
     });
   });
+
+  describe('GET /api/resumes/:id/matches', () => {
+    it('should return 404 if resume does not exist or belongs to someone else', async () => {
+      vi.mocked(resumeRepo.findResumeByIdAndUser).mockResolvedValue(null);
+
+      const response = await request(app)
+        .get('/api/resumes/foreign-id-999/matches')
+        .set('Authorization', `Bearer ${validToken}`);
+
+      expect(response.status).toBe(404);
+      expect(response.body.message).toBe('Resume not found or access denied');
+    });
+
+    it('should return the match results if the resume belongs to the user', async () => {
+      vi.mocked(resumeRepo.findResumeByIdAndUser).mockResolvedValue(mockResume as any);
+
+      const mockMatches = [
+        {
+          id: 'match-123',
+          score: 60,
+          jobRole: { title: 'iOS Engineer' },
+        },
+      ];
+      vi.mocked(resumeRepo.findMatchesByResumeId).mockResolvedValue(mockMatches as any[]);
+
+      const response = await request(app)
+        .get(`/api/resumes/${mockResumeId}/matches`)
+        .set('Authorization', `Bearer ${validToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.data).toBeInstanceOf(Array);
+      expect(response.body.data[0].score).toBe(60);
+      expect(response.body.data[0].jobRole.title).toBe('iOS Engineer');
+    });
+  });
 });

@@ -51,3 +51,13 @@ export const getResumeById = async (
 
   return toResumeResponse(resume);
 };
+
+export const getResumeMatches = async (userId: string, resumeId: string) => {
+  const resume = await resumeRepo.findResumeByIdAndUser(resumeId, userId);
+  if (!resume) {
+    throw new AppError('Resume not found or access denied', 404);
+  }
+
+  const matches = await resumeRepo.findMatchesByResumeId(resumeId);
+  return matches;
+};
