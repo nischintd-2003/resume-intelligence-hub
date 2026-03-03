@@ -35,6 +35,7 @@ components:
                   type: string
             token:
               type: string
+              
     ResumeResponse:
         type: object
         properties:
@@ -46,7 +47,8 @@ components:
             type: string
           createdAt:
             type: string
-            format: date-time              
+            format: date-time
+
     JobResponse:
           type: object
           properties:
@@ -61,6 +63,7 @@ components:
             createdAt:
               type: string
               format: date-time
+
     MatchResponse:
           type: object
           properties:
@@ -84,6 +87,7 @@ components:
                   type: array
                   items:
                     type: string
+
     jobRole:
           type: object
           properties:
@@ -96,6 +100,50 @@ components:
           createdAt:
             type: string
             format: date-time
+
+    DashboardResponse:
+          type: object
+          properties:
+            totalResumes:
+              type: integer
+              example: 12
+            topSkills:
+              type: array
+              items:
+                type: object
+                properties:
+                  skill:
+                    type: string
+                    example: React
+                  count:
+                    type: integer
+                    example: 8
+            topUniversities:
+              type: array
+              items:
+                type: object
+                properties:
+                  university:
+                    type: string
+                    example: Silicon University
+                  count:
+                    type: integer
+                    example: 3
+            matchAverages:
+              type: array
+              items:
+                type: object
+                properties:
+                  jobTitle:
+                    type: string
+                    example: iOS Engineer
+                  averageScore:
+                    type: number
+                    example: 75.5
+            updatedAt:
+              type: string
+              format: date-time
+              nullable: true
 
 paths:
   /health:
