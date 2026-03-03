@@ -9,6 +9,7 @@ import { errorHandler } from './middlewares/errorHandler';
 import { requireAuth } from './middlewares/requireAuth';
 import resumeRoutes from './routes/resume.routes';
 import jobRoutes from './routes/job.routes';
+import analyticsRoutes from './routes/analytics.routes';
 
 const app: Application = express();
 
@@ -31,6 +32,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/resumes', resumeRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 app.get('/api/protected', requireAuth, (req, res) => {
   res.status(200).json({ status: 'success', user: req.user });
