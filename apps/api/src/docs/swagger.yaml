@@ -439,3 +439,26 @@ paths:
                     $ref: '#/components/schemas/JobResponse'
         '404':
           description: Job not found or access denied
+
+  /api/analytics/dashboard:
+      get:
+        summary: Get summary analytics for the dashboard
+        tags:
+          - Analytics
+        security:
+          - bearerAuth: []
+        responses:
+          '200':
+            description: Pre-computed dashboard analytics data
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: success
+                    data:
+                      $ref: '#/components/schemas/DashboardResponse'
+          '401':
+            description: Unauthorized
