@@ -6,8 +6,10 @@ import {
   ForeignKey,
   BelongsTo,
   CreatedAt,
+  HasMany,
 } from 'sequelize-typescript';
 import { User } from './User';
+import { MatchResult } from './MatchResults';
 
 @Table({ tableName: 'job_roles', timestamps: true })
 export class JobRole extends Model {
@@ -33,4 +35,7 @@ export class JobRole extends Model {
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   declare isActive: boolean;
+
+  @HasMany(() => MatchResult)
+  declare matches: MatchResult[];
 }

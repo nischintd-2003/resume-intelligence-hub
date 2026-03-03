@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, ForeignKey } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { ParsedResume } from './ParsedResume';
 import { JobRole } from './JobRole';
 
@@ -11,9 +11,15 @@ export class MatchResult extends Model {
   @Column({ type: DataType.UUID, allowNull: false })
   declare resumeId: string;
 
+  @BelongsTo(() => ParsedResume)
+  declare resume: ParsedResume;
+
   @ForeignKey(() => JobRole)
   @Column({ type: DataType.UUID, allowNull: false })
   declare jobId: string;
+
+  @BelongsTo(() => JobRole)
+  declare jobRole: JobRole;
 
   @Column({ type: DataType.INTEGER, allowNull: false })
   declare score: number;

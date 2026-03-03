@@ -11,5 +11,6 @@ router.use(requireAuth);
 router.post('/', validate(CreateResumeSchema), resumeController.createResume);
 router.get('/', resumeController.getResumes);
 router.get('/:id', resumeController.getResume);
+router.get('/:id/matches', resumeController.getMatches);
 
 export default router;
