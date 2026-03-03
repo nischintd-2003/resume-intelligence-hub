@@ -61,6 +61,41 @@ components:
             createdAt:
               type: string
               format: date-time
+    MatchResponse:
+          type: object
+          properties:
+            id:
+              type: string
+            resumeId:
+              type: string
+            jobId:
+              type: string
+            score:
+              type: integer
+              example: 60
+            details:
+              type: object
+              properties:
+                matchedSkills:
+                  type: array
+                  items:
+                    type: string
+                missingSkills:
+                  type: array
+                  items:
+                    type: string
+    jobRole:
+          type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            isActive:
+              type: boolean
+          createdAt:
+            type: string
+            format: date-time
 
 paths:
   /health:
@@ -229,6 +264,40 @@ paths:
           description: Resume not found or access denied
         '401':
           description: Unauthorized
+
+  /api/resumes/{id}/matches:
+      get:
+        summary: Get all job matches for a specific resume
+        tags:
+          - Resumes
+        security:
+          - bearerAuth: []
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: List of matches scored against active jobs
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: success
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/MatchResponse'
+          '404':
+            description: Resume not found or access denied
+          '401':
+            description: Unauthorized 
+
   /api/jobs:
       post:
         summary: Create a target job role
