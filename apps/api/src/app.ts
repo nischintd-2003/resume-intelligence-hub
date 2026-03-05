@@ -17,7 +17,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-const swaggerPath = path.resolve(__dirname, './docs/swagger.yaml');
+const swaggerPath = path.join(process.cwd(), 'src/docs/swagger.yaml');
 const swaggerDocument = YAML.load(swaggerPath);
 
 app.get('/health', (req, res) => {
