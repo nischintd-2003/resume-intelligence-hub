@@ -17,3 +17,9 @@ export interface LoginInput {
 export interface RegisterInput extends LoginInput {
   username: string;
 }
+
+export interface AuthContextType {
+  user: User | null;
+  isAuthenticated: boolean;
+  logout: () => void;
+}
