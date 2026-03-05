@@ -108,6 +108,127 @@ services:
     networks:
       - resume-net
 
+  api:
+      build:
+        context: .
+        dockerfile: Dockerfile
+        args:
+          APP_NAME: api
+      ports:
+        - "3000:3000"
+      environment:
+        - NODE_ENV=production
+        - POSTGRES_HOST=postgres
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        - POSTGRES_DB=${POSTGRES_DB}
+        - REDIS_HOST=redis
+        - JWT_SECRET=${JWT_SECRET}
+        - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+        - MINIO_ENDPOINT=http://minio:9000
+        - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+        - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+        - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
+      depends_on:
+        postgres:
+          condition: service_healthy
+        redis:
+          condition: service_healthy
+      networks:
+        - resume-net
+
+  worker-ocr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: worker-ocr
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - REDIS_HOST=redis
+      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - resume-net
+
+  worker-nlp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: worker-nlp
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - REDIS_HOST=redis
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - resume-net
+
+  worker-match:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: worker-match
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - REDIS_HOST=redis
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - resume-net
+
+  worker-insights:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: worker-insights
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - REDIS_HOST=redis
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - resume-net
+
 volumes:
   pg_data:
   redis_data:

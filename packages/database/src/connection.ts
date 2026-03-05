@@ -28,7 +28,10 @@ export const initDatabase = async () => {
   try {
     await sequelize.authenticate();
     logger.info('PostgreSQL connected successfully');
-    await sequelize.sync({ alter: true });
+    if (!process.env.APP_NAME || process.env.APP_NAME === 'api') {
+      await sequelize.sync({ alter: true });
+      logger.info('Database schema synced successfully');
+    }
   } catch (error) {
     logger.error('Unable to connect to PostgreSQL:', error);
     throw error;
