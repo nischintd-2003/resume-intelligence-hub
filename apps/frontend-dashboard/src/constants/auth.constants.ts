@@ -23,6 +23,16 @@ export const AUTH_COPY = {
     REGISTER_LINK: 'Create one',
   },
 
+  REGISTER: {
+    PAGE_TITLE: 'Create account — Resume Intelligence Hub',
+    HEADING: 'Create an account',
+    SUBHEADING: 'Join Resume Intelligence Hub to get started',
+    SUBMIT: 'Create Account',
+    SUBMITTING: 'Creating account…',
+    HAS_ACCOUNT: 'Already have an account?',
+    LOGIN_LINK: 'Sign in',
+  },
+
   FIELDS: {
     USERNAME: 'Username',
     USERNAME_PLACEHOLDER: 'e.g. jdoe',
