@@ -2,6 +2,7 @@ import { api } from './api';
 import { API_ENDPOINTS } from '../constants/api.constants';
 import type { LoginInput, RegisterInput, AuthResponseDTO } from '../types/auth.types';
 import type { ApiResponse } from '../types/response.types';
+import { AUTH_STORAGE_KEYS } from '../constants/auth.constants';
 
 export const authService = {
   login: async (credentials: LoginInput): Promise<AuthResponseDTO> => {
@@ -21,7 +22,7 @@ export const authService = {
   },
 
   logout: (): void => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem(AUTH_STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
   },
 };
