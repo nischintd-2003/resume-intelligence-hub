@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
+import PageLoader from './components/loading/PageLoader';
 
 const LoginPage = lazy(() => import('./pages/auth/Login'));
 const RegisterPage = lazy(() => import('./pages/auth/Register'));
@@ -19,16 +20,6 @@ const queryClient = new QueryClient({
     },
   },
 });
-
-// loading fallback
-
-function PageLoader() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-slate-700" />
-    </div>
-  );
-}
 
 // App
 
