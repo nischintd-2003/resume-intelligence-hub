@@ -14,12 +14,15 @@ export interface LoginInput {
   password: string;
 }
 
-export interface RegisterInput extends LoginInput {
+export interface RegisterInput {
   username: string;
+  email: string;
+  password: string;
 }
 
 export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  login: (data: AuthResponseDTO) => void;
   logout: () => void;
 }
