@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FileText } from 'lucide-react';
 import { Button, FormField, Input, PasswordInput } from '../../components/ui';
-import { useLogin } from '../../hooks/queries/useAuth';
+import { useLogin } from '../../hooks/useAuth';
 import { loginSchema, type LoginFormValues } from '../../validations/auth.schemas';
 import { AUTH_COPY } from '../../constants/auth.constants';
 import { getApiErrorMessage } from '../../utils/errors';

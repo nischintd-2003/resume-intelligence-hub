@@ -8,7 +8,6 @@ import { ROUTES } from './constants/nav.constants';
 import PageLoader from './components/loading/PageLoader';
 
 // Auth Pages
-
 const LoginPage = lazy(() => import('./pages/auth/Login'));
 const RegisterPage = lazy(() => import('./pages/auth/Register'));
 
