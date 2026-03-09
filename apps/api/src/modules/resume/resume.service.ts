@@ -28,9 +28,15 @@ export const uploadResumeRecord = async (
 
     logger.info(`Successfully queued resume ${resume.id} to ocr-queue`);
   } catch (error) {
-    logger.error(`Failed to queue resume ${resume.id}:`, error);
+    await resumeRepo.updateResumeStatus(resume.id, 'failed').catch((updateErr) => {
+      logger.error(`Failed to mark resume ${resume.id} as failed:`, updateErr);
+    });
+    logger.error(`Failed to queue resume ${resume.id} to ocr-queue:`, error);
+    throw new AppError(
+      'Resume was saved but could not be queued for processing. Please try again.',
+      500,
+    );
   }
-
   return toResumeResponse(resume);
 };
 

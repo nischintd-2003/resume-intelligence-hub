@@ -23,6 +23,10 @@ export const findResumeByIdAndUser = async (id: string, userId: string) => {
   });
 };
 
+export const updateResumeStatus = async (id: string, status: string) => {
+  return await ParsedResume.update({ status }, { where: { id } });
+};
+
 export const findMatchesByResumeId = async (resumeId: string) => {
   return await MatchResult.findAll({
     where: { resumeId },
