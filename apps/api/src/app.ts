@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.routes';
 import { errorHandler } from './middlewares/errorHandler';
 import { requireAuth } from './middlewares/requireAuth';
 import { rateLimiter } from './middlewares/rateLimiter';
+import { corsConfig } from './config/cors';
 import resumeRoutes from './routes/resume.routes';
 import jobRoutes from './routes/job.routes';
 import analyticsRoutes from './routes/analytics.routes';
@@ -15,7 +16,7 @@ import analyticsRoutes from './routes/analytics.routes';
 const app: Application = express();
 
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsConfig));
 app.use(express.json());
 app.use(
   '/api',
