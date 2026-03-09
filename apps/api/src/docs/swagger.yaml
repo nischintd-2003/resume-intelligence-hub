@@ -264,6 +264,17 @@ paths:
           - Resumes
         security:
           - bearerAuth: []
+        parameters:
+          - in: query
+            name: page
+            schema:
+              type: integer
+              default: 1
+          - in: query
+            name: limit
+            schema:
+              type: integer
+              default: 10
         responses:
           '200':
             description: List of resumes
@@ -279,6 +290,19 @@ paths:
                       type: array
                       items:
                         $ref: '#/components/schemas/ResumeResponse'
+                    meta:
+                      type: object
+                      properties:
+                        totalItems:
+                          type: integer
+                        itemCount:
+                          type: integer
+                        itemsPerPage:
+                          type: integer
+                        totalPages:
+                          type: integer
+                        currentPage:
+                          type: integer
           '401':
             description: Unauthorized
 
@@ -439,6 +463,54 @@ paths:
                     $ref: '#/components/schemas/JobResponse'
         '404':
           description: Job not found or access denied
+    patch:
+      summary: Update a specific job role
+      tags:
+        - Jobs
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                isActive:
+                  type: boolean
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Job updated successfully
+        '404':
+          description: Job not found or access denied
+    delete:
+      summary: Delete a specific job role
+      tags:
+        - Jobs
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Job deleted successfully
+        '404':
+          description: Job not found or access denied
+
 
   /api/analytics/dashboard:
       get:

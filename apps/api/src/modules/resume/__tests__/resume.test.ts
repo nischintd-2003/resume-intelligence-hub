@@ -70,19 +70,22 @@ describe('Resume Module Integration', () => {
   });
 
   describe('GET /api/resumes', () => {
-    it('should return a list of resumes for the authenticated user', async () => {
+    it('should return a paginated list of resumes for the authenticated user', async () => {
       vi.mocked(resumeRepo.findResumesByUser).mockResolvedValue({
-        rows: [],
+        rows: [mockResume],
         count: 1,
       } as any);
 
       const response = await request(app)
-        .get('/api/resumes')
+        .get('/api/resumes?page=1&limit=10')
         .set('Authorization', `Bearer ${validToken}`);
 
       expect(response.status).toBe(200);
       expect(response.body.data).toBeInstanceOf(Array);
       expect(response.body.data[0].id).toBe(mockResumeId);
+
+      expect(response.body.meta.totalItems).toBe(1);
+      expect(response.body.meta.currentPage).toBe(1);
     });
   });
 
