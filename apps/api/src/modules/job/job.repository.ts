@@ -21,3 +21,17 @@ export const findJobByIdAndUser = async (id: string, userId: string) => {
     where: { id, userId },
   });
 };
+
+export const updateJobRecord = async (userId: string, jobId: string, updateData: any) => {
+  const [_affectedCount, [updatedJob]] = await JobRole.update(updateData, {
+    where: { id: jobId, userId },
+    returning: true,
+  });
+  return updatedJob || null;
+};
+
+export const deleteJobRecord = async (userId: string, jobId: string) => {
+  return await JobRole.destroy({
+    where: { id: jobId, userId },
+  });
+};

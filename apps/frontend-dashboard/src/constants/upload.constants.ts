@@ -1,25 +1,9 @@
-// ─── TUS / Upload Config ──────────────────────────────────────────────────────
-
-/**
- * Base URL of the TUS server.
- * nginx proxies  /files/  →  tusd:8080/files/
- * Override via VITE_TUS_ENDPOINT for non-default environments.
- */
 export const TUS_ENDPOINT =
   (import.meta.env.VITE_TUS_ENDPOINT as string | undefined) ?? 'http://localhost/files/';
 
 export const UPLOAD_CONFIG = {
-  /** TUS retry delays in ms (0 = immediate first retry) */
   RETRY_DELAYS: [0, 1_000, 3_000, 5_000] as number[],
 
-  /**
-   * Accepted MIME types — must match what the OCR worker actually supports.
-   *
-   * worker-ocr/inspector.ts routes:
-   *   application/pdf        → pdf-parse
-   *   application/vnd...docx → mammoth
-   *   image/*                → Tesseract OCR (jpeg, png, webp, etc.)
-   */
   ACCEPTED_MIME_TYPES: [
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -28,17 +12,12 @@ export const UPLOAD_CONFIG = {
     'image/webp',
   ] as string[],
 
-  /** Human-readable accepted extensions shown in the UI */
   ACCEPTED_EXTENSIONS: ['.pdf', '.docx', '.jpg', '.jpeg', '.png', '.webp'] as string[],
 
-  /** Maximum file size in bytes (10 MB) */
   MAX_SIZE_BYTES: 10 * 1024 * 1024,
 
-  /** Maximum file size label for UI */
   MAX_SIZE_LABEL: '10 MB',
 } as const;
-
-// ─── UI Copy ──────────────────────────────────────────────────────────────────
 
 export const UPLOAD_COPY = {
   PAGE_TITLE: 'Upload Resumes — Resume Intelligence Hub',
