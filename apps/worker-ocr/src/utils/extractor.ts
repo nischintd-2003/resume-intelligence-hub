@@ -13,7 +13,7 @@ export const extractTextFromBuffer = async (
     switch (fileType) {
       case 'pdf': {
         logger.info(`[Job ${jobId}] Routing to PDF native parser...`);
-        const parser = new PDFParse({ data: buffer });
+        const parser = new PDFParse(buffer);
         const pdfText = await parser.getText();
 
         if (pdfText.text.trim().length < 50) {
