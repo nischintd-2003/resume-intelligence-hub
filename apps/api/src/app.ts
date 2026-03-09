@@ -7,6 +7,7 @@ import YAML from 'yamljs';
 import authRoutes from './routes/auth.routes';
 import { errorHandler } from './middlewares/errorHandler';
 import { requireAuth } from './middlewares/requireAuth';
+import { rateLimiter } from './middlewares/rateLimiter';
 import resumeRoutes from './routes/resume.routes';
 import jobRoutes from './routes/job.routes';
 import analyticsRoutes from './routes/analytics.routes';
@@ -16,6 +17,14 @@ const app: Application = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(
+  '/api',
+  rateLimiter({
+    capacity: 100,
+    refillRate: 2,
+    blockDuration: 300,
+  }),
+);
 
 const swaggerPath = path.join(process.cwd(), 'src/docs/swagger.yaml');
 const swaggerDocument = YAML.load(swaggerPath);
