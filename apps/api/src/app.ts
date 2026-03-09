@@ -4,14 +4,11 @@ import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 import path from 'path';
 import YAML from 'yamljs';
-import authRoutes from './routes/auth.routes';
+import appRoutes from './routes/index';
 import { errorHandler } from './middlewares/errorHandler';
-import { requireAuth } from './middlewares/requireAuth';
 import { rateLimiter } from './middlewares/rateLimiter';
 import { corsConfig } from './config/cors';
-import resumeRoutes from './routes/resume.routes';
-import jobRoutes from './routes/job.routes';
-import analyticsRoutes from './routes/analytics.routes';
+import { RATE_LIMIT } from './config/constants';
 
 const app: Application = express();
 
@@ -21,16 +18,16 @@ app.use(express.json());
 app.use(
   '/api',
   rateLimiter({
-    capacity: 100,
-    refillRate: 2,
-    blockDuration: 300,
+    capacity: RATE_LIMIT.CAPACITY,
+    refillRate: RATE_LIMIT.REFILL_RATE,
+    blockDuration: RATE_LIMIT.BLOCK_DURATION,
   }),
 );
 
 const swaggerPath = path.join(process.cwd(), 'src/docs/swagger.yaml');
 const swaggerDocument = YAML.load(swaggerPath);
 
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.status(200).json({
     status: 'ok',
     uptime: process.uptime(),
@@ -38,15 +35,8 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.use('/api/auth', authRoutes);
+app.use('/api/v1', appRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use('/api/resumes', resumeRoutes);
-app.use('/api/jobs', jobRoutes);
-app.use('/api/analytics', analyticsRoutes);
-
-app.get('/api/protected', requireAuth, (req, res) => {
-  res.status(200).json({ status: 'success', user: req.user });
-});
 
 app.use(errorHandler);
 
