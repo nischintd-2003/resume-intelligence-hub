@@ -12,8 +12,7 @@ import { cn } from '../../utils/cn';
 import { useUpload } from '../../hooks/useUpload';
 import { Button } from '../../components/ui';
 import { UPLOAD_COPY, UPLOAD_CONFIG, STATUS_BADGE_CLASSES } from '../../constants/upload.constants';
-import type { UploadStatus } from '../../types/upload.types';
-import type { DropZoneProps, FileRowProps } from '../../types/dashboard.types';
+import type { DropZoneProps, FileRowProps, UploadStatus } from '../../types/upload.types';
 import { formatBytes } from '../../utils/dashboard.utils';
 
 // Page

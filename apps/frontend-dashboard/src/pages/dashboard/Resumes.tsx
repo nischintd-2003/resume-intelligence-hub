@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { ChevronLeft, ChevronRight, X, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { useResumes, useResumeMatches } from '../../hooks/useResumes';
-import type { MatchResultDTO, ResumeStatus } from '../../types/resume.types';
-import { STATUS_CLASSES, STATUS_LABELS } from '../../constants/resume.constants';
 import type {
   MatchesPanelProps,
+  MatchResultDTO,
   PaginationProps,
   ResumeRowProps,
+  ResumeStatus,
   SkillGroupProps,
-} from '../../types/dashboard.types';
+} from '../../types/resume.types';
+import { STATUS_CLASSES, STATUS_LABELS } from '../../constants/resume.constants';
 import { deriveFilename, formatDate } from '../../utils/dashboard.utils';
 
 export default function ResumesPage() {

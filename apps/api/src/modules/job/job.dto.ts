@@ -31,5 +31,6 @@ export type JobResponseDTO = {
   id: string;
   title: string;
   requiredSkills: string[];
+  isActive: boolean;
   createdAt: Date;
 };

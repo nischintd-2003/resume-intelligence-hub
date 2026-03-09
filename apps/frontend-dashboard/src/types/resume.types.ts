@@ -52,3 +52,29 @@ export interface MatchResultDTO {
   details: MatchDetails;
   JobRole: JobRoleRef;
 }
+
+// Props
+
+export interface ResumeRowProps {
+  resume: ResumeDTO;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+export interface MatchesPanelProps {
+  resumeId: string;
+  onClose: () => void;
+}
+
+export interface SkillGroupProps {
+  label: string;
+  skills: string[];
+  variant: 'matched' | 'missing';
+}
+
+export interface PaginationProps {
+  meta: { currentPage: number; totalPages: number; totalItems: number; itemsPerPage: number };
+  onPrev: () => void;
+  onNext: () => void;
+  isFetching: boolean;
+}

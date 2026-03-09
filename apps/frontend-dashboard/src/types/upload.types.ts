@@ -15,3 +15,15 @@ export interface TusUploadCallbacks {
   onSuccess: (minioPath: string) => void;
   onError: (message: string) => void;
 }
+
+// Props
+
+export interface DropZoneProps {
+  onFilesSelected: (files: FileList | File[]) => void;
+  disabled?: boolean;
+}
+
+export interface FileRowProps {
+  item: UploadFileItem;
+  onRemove: () => void;
+}
