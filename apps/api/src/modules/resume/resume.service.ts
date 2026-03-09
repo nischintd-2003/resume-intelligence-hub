@@ -34,9 +34,19 @@ export const uploadResumeRecord = async (
   return toResumeResponse(resume);
 };
 
-export const getUserResumes = async (userId: string): Promise<ResumeResponseDTO[]> => {
-  const resumes = await resumeRepo.findResumesByUser(userId);
-  return resumes.map(toResumeResponse);
+export const getUserResumes = async (userId: string, page: number, limit: number) => {
+  const offset = (page - 1) * limit;
+  const { rows, count } = await resumeRepo.findResumesByUser(userId, limit, offset);
+  return {
+    data: rows.map(toResumeResponse),
+    meta: {
+      totalItems: count,
+      itemCount: rows.length,
+      itemsPerPage: limit,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+    },
+  };
 };
 
 export const getResumeById = async (

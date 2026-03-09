@@ -1,6 +1,6 @@
 import * as jobRepo from './job.repository';
 import { AppError } from '../../utils/AppError';
-import { CreateJobInput, JobResponseDTO } from './job.dto';
+import { CreateJobInput, JobResponseDTO, UpdateJobInput } from './job.dto';
 import { toJobResponse } from './job.mapper';
 
 export const createJobRole = async (
@@ -24,4 +24,24 @@ export const getJobById = async (userId: string, jobId: string): Promise<JobResp
   }
 
   return toJobResponse(job);
+};
+
+export const updateJobRole = async (userId: string, jobId: string, data: UpdateJobInput) => {
+  const updatedJob = await jobRepo.updateJobRecord(userId, jobId, data);
+
+  if (!updatedJob) {
+    throw new AppError('Job not found or access denied', 404);
+  }
+
+  return toJobResponse(updatedJob);
+};
+
+export const deleteJobRole = async (userId: string, jobId: string) => {
+  const deletedCount = await jobRepo.deleteJobRecord(userId, jobId);
+
+  if (deletedCount === 0) {
+    throw new AppError('Job not found or access denied', 404);
+  }
+
+  return true;
 };
