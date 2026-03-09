@@ -1,9 +1,4 @@
-export type UploadStatus =
-  | 'idle' // queued, not yet started
-  | 'uploading' // TUS transfer in progress
-  | 'registering' // TUS done, calling POST /api/resumes
-  | 'done' // fully complete, resumeId available
-  | 'error'; // any stage failed
+export type UploadStatus = 'idle' | 'uploading' | 'registering' | 'done' | 'error';
 
 export interface UploadFileItem {
   id: string;
@@ -13,4 +8,22 @@ export interface UploadFileItem {
   error?: string;
   minioPath?: string;
   resumeId?: string;
+}
+
+export interface TusUploadCallbacks {
+  onProgress: (percent: number) => void;
+  onSuccess: (minioPath: string) => void;
+  onError: (message: string) => void;
+}
+
+// Props
+
+export interface DropZoneProps {
+  onFilesSelected: (files: FileList | File[]) => void;
+  disabled?: boolean;
+}
+
+export interface FileRowProps {
+  item: UploadFileItem;
+  onRemove: () => void;
 }

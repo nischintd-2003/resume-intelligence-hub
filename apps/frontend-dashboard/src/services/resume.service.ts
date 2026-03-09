@@ -1,30 +1,35 @@
 import { api } from './api';
 import { API_ENDPOINTS } from '../constants/api.constants';
-import type { ApiResponse } from '../types/response.types';
-
-export interface ResumeResponseDTO {
-  id: string;
-  minioPath: string;
-  status: string;
-  createdAt: string;
-}
+import type { ApiResponse, PaginatedResumesResponse } from '../types/response.types';
+import type { MatchResultDTO, PaginatedResult, ResumeDTO } from '../types/resume.types';
 
 export const resumeService = {
-  /**
-   * Register a resume that has already been uploaded to MinIO via TUS.
-   * Triggers the OCR queue on the backend.
-   *
-   * @param minioPath  The object path returned by TUS, e.g. `files/{id}`
-   */
-  register: async (minioPath: string): Promise<ResumeResponseDTO> => {
-    const response = await api.post<ApiResponse<ResumeResponseDTO>>(API_ENDPOINTS.RESUMES.BASE, {
+  register: async (minioPath: string): Promise<ResumeDTO> => {
+    const response = await api.post<ApiResponse<ResumeDTO>>(API_ENDPOINTS.RESUMES.BASE, {
       minioPath,
     });
     return response.data.data;
   },
 
-  getAll: async (): Promise<ResumeResponseDTO[]> => {
-    const response = await api.get<ApiResponse<ResumeResponseDTO[]>>(API_ENDPOINTS.RESUMES.BASE);
+  getPaginated: async (page = 1, limit = 10): Promise<PaginatedResult<ResumeDTO>> => {
+    const response = await api.get<PaginatedResumesResponse>(API_ENDPOINTS.RESUMES.BASE, {
+      params: { page, limit },
+    });
+    return {
+      data: response.data.data,
+      meta: response.data.meta,
+    };
+  },
+
+  getById: async (id: string): Promise<ResumeDTO> => {
+    const response = await api.get<ApiResponse<ResumeDTO>>(`${API_ENDPOINTS.RESUMES.BASE}/${id}`);
+    return response.data.data;
+  },
+
+  getMatches: async (id: string): Promise<MatchResultDTO[]> => {
+    const response = await api.get<ApiResponse<MatchResultDTO[]>>(
+      `${API_ENDPOINTS.RESUMES.BASE}/${id}/matches`,
+    );
     return response.data.data;
   },
 };

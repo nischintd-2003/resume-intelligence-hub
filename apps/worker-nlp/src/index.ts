@@ -39,7 +39,7 @@ const startNlpWorker = async () => {
         `[Job ${jobId}] Database updated. Resume ${job.data.resumeId} status is now 'parsed'.`,
       );
 
-      await matchQueue.add('calculate-math', {
+      await matchQueue.add('calculate-match', {
         resumeId: job.data.resumeId,
         userId: job.data.userId,
       });

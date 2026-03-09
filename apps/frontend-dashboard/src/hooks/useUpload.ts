@@ -28,7 +28,6 @@ function validateFile(file: File): string | null {
 
 export function useUpload(): UseUploadReturn {
   const [items, setItems] = useState<UploadFileItem[]>([]);
-
   const abortFnsRef = useRef<Map<string, () => void>>(new Map());
 
   const patchItem = useCallback((id: string, patch: Partial<UploadFileItem>) => {

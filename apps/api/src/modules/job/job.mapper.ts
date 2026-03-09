@@ -6,6 +6,7 @@ export const toJobResponse = (job: JobRole): JobResponseDTO => {
     id: job.id,
     title: job.title,
     requiredSkills: job.requiredSkills,
+    isActive: job.isActive,
     createdAt: job.createdAt,
   };
 };

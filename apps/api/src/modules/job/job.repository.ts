@@ -1,5 +1,5 @@
 import { JobRole } from '@resume-hub/database';
-import { CreateJobInput } from './job.dto';
+import { CreateJobInput, UpdateJobInput } from './job.dto';
 
 export const createJobRecord = async (userId: string, data: CreateJobInput) => {
   return await JobRole.create({
@@ -22,7 +22,11 @@ export const findJobByIdAndUser = async (id: string, userId: string) => {
   });
 };
 
-export const updateJobRecord = async (userId: string, jobId: string, updateData: any) => {
+export const updateJobRecord = async (
+  userId: string,
+  jobId: string,
+  updateData: UpdateJobInput,
+) => {
   const [_affectedCount, [updatedJob]] = await JobRole.update(updateData, {
     where: { id: jobId, userId },
     returning: true,
