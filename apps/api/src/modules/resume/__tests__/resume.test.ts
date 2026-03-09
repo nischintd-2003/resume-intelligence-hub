@@ -71,7 +71,10 @@ describe('Resume Module Integration', () => {
 
   describe('GET /api/resumes', () => {
     it('should return a list of resumes for the authenticated user', async () => {
-      vi.mocked(resumeRepo.findResumesByUser).mockResolvedValue([mockResume] as any[]);
+      vi.mocked(resumeRepo.findResumesByUser).mockResolvedValue({
+        rows: [],
+        count: 1,
+      } as any);
 
       const response = await request(app)
         .get('/api/resumes')

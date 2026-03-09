@@ -8,9 +8,11 @@ export const createResumeRecord = async (userId: string, minioPath: string) => {
   });
 };
 
-export const findResumesByUser = async (userId: string) => {
-  return await ParsedResume.findAll({
+export const findResumesByUser = async (userId: string, limit: number, offset: number) => {
+  return await ParsedResume.findAndCountAll({
     where: { userId },
+    limit,
+    offset,
     order: [['createdAt', 'DESC']],
   });
 };
