@@ -1,3 +1,5 @@
+import type { UploadStatus } from '../types/upload.types';
+
 export const TUS_ENDPOINT =
   (import.meta.env.VITE_TUS_ENDPOINT as string | undefined) ?? 'http://localhost/files/';
 
@@ -55,3 +57,11 @@ export const UPLOAD_COPY = {
   EMPTY: 'No files selected yet.',
   FILES_QUEUED: (n: number) => `${n} file${n === 1 ? '' : 's'} queued`,
 } as const;
+
+export const STATUS_BADGE_CLASSES: Record<UploadStatus, string> = {
+  idle: 'bg-slate-100 text-slate-500',
+  uploading: 'bg-blue-50 text-blue-600',
+  registering: 'bg-amber-50 text-amber-600',
+  done: 'bg-green-50 text-green-600',
+  error: 'bg-red-50 text-red-600',
+};

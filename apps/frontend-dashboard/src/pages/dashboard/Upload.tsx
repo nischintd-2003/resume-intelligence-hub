@@ -11,8 +11,10 @@ import {
 import { cn } from '../../utils/cn';
 import { useUpload } from '../../hooks/useUpload';
 import { Button } from '../../components/ui';
-import { UPLOAD_COPY, UPLOAD_CONFIG } from '../../constants/upload.constants';
-import type { UploadFileItem, UploadStatus } from '../../types/upload.types';
+import { UPLOAD_COPY, UPLOAD_CONFIG, STATUS_BADGE_CLASSES } from '../../constants/upload.constants';
+import type { UploadStatus } from '../../types/upload.types';
+import type { DropZoneProps, FileRowProps } from '../../types/dashboard.types';
+import { formatBytes } from '../../utils/dashboard.utils';
 
 // Page
 
@@ -82,11 +84,6 @@ export default function UploadPage() {
 }
 
 // DropZone
-
-interface DropZoneProps {
-  onFilesSelected: (files: FileList | File[]) => void;
-  disabled?: boolean;
-}
 
 function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
   const [isDragging, setIsDragging] = useState(false);
@@ -192,11 +189,6 @@ function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
 
 //  FileRow
 
-interface FileRowProps {
-  item: UploadFileItem;
-  onRemove: () => void;
-}
-
 function FileRow({ item, onRemove }: FileRowProps) {
   const canRemove = item.status === 'idle' || item.status === 'error';
 
@@ -263,14 +255,6 @@ function FileRow({ item, onRemove }: FileRowProps) {
 
 // StatusBadge
 
-const STATUS_BADGE_CLASSES: Record<UploadStatus, string> = {
-  idle: 'bg-slate-100 text-slate-500',
-  uploading: 'bg-blue-50 text-blue-600',
-  registering: 'bg-amber-50 text-amber-600',
-  done: 'bg-green-50 text-green-600',
-  error: 'bg-red-50 text-red-600',
-};
-
 function StatusBadge({ status }: { status: UploadStatus }) {
   return (
     <span
@@ -298,12 +282,4 @@ function StatusIcon({ status }: { status: UploadStatus }) {
     default:
       return <AlertCircle className="w-4 h-4 text-slate-300 shrink-0" aria-hidden="true" />;
   }
-}
-
-// Util
-
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }

@@ -1,3 +1,4 @@
+import type { PaginatedResult, ResumeDTO } from './resume.types';
 import type { UploadFileItem } from './upload.types';
 
 export interface ApiResponse<T> {
@@ -14,9 +15,8 @@ export interface UseUploadReturn {
   clearDone: () => void;
 }
 
-export interface ResumeResponseDTO {
-  id: string;
-  minioPath: string;
+export interface PaginatedResumesResponse {
   status: string;
-  createdAt: string;
+  data: ResumeDTO[];
+  meta: PaginatedResult<ResumeDTO>['meta'];
 }
