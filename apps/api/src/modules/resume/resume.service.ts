@@ -3,8 +3,8 @@ import { config } from '@resume-hub/config';
 import { logger } from '@resume-hub/logger';
 import * as resumeRepo from './resume.repository';
 import { AppError } from '../../utils/AppError';
-import { CreateResumeInput, ResumeResponseDTO } from './resume.dto';
-import { toResumeResponse } from './resume.mapper';
+import { CreateResumeInput, MatchResultDTO, ResumeResponseDTO } from './resume.dto';
+import { toMatchResultResponse, toResumeResponse } from './resume.mapper';
 
 export const uploadResumeRecord = async (
   userId: string,
@@ -68,12 +68,15 @@ export const getResumeById = async (
   return toResumeResponse(resume);
 };
 
-export const getResumeMatches = async (userId: string, resumeId: string) => {
+export const getResumeMatches = async (
+  userId: string,
+  resumeId: string,
+): Promise<MatchResultDTO[]> => {
   const resume = await resumeRepo.findResumeByIdAndUser(resumeId, userId);
   if (!resume) {
     throw new AppError('Resume not found or access denied', 404);
   }
 
   const matches = await resumeRepo.findMatchesByResumeId(resumeId);
-  return matches;
+  return matches.map(toMatchResultResponse);
 };

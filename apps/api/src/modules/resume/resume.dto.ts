@@ -23,3 +23,21 @@ export type ResumeResponseDTO = {
   extractedData?: any;
   createdAt: Date;
 };
+
+export type JobRoleSummaryDTO = {
+  id: string;
+  title: string;
+  isActive: boolean;
+};
+
+export type MatchResultDTO = {
+  id: string;
+  resumeId: string;
+  jobId: string;
+  score: number;
+  details: {
+    matchedSkills: string[];
+    missingSkills: string[];
+  };
+  jobRole: JobRoleSummaryDTO | null;
+};
