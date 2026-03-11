@@ -4,8 +4,17 @@ import { logger } from '@resume-hub/logger';
 import { downloadResumeBuffer } from './utils/storage';
 import { detectFileType } from './utils/inspector';
 import { extractTextFromBuffer } from './utils/extractor';
+import {
+  startMetricsServer,
+  jobsProcessedTotal,
+  jobErrorsTotal,
+  jobProcessingTime,
+} from './metrics';
+
+startMetricsServer(3001);
 
 const startOcrWorker = async () => {
+  const endTimer = jobProcessingTime.startTimer();
   try {
     await initDatabase();
 
@@ -37,12 +46,18 @@ const startOcrWorker = async () => {
         rawText: cleanText,
       });
 
+      jobsProcessedTotal.inc();
+
+      endTimer();
+
       logger.info(`[Job ${jobId}] Pushed raw text to NLP Queue`);
     });
 
     logger.info('OCR/Extraction Worker started and listening to "ocr-queue"');
   } catch (error) {
     logger.error('Failed to start OCR worker:', error);
+    jobErrorsTotal.inc();
+    endTimer();
     process.exit(1);
   }
 };
