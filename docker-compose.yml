@@ -162,6 +162,31 @@ services:
         condition: service_healthy
     networks:
       - resume-net
+      
+  worker-stats:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: worker-stats
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - REDIS_HOST=redis
+      - STATS_PORT=3002
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - resume-net
 
   worker-nlp:
     build:
