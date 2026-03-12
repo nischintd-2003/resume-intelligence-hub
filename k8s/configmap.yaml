@@ -1,0 +1,37 @@
+# CONFIGMAP
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: resume-hub-config
+  namespace: resume-hub
+data:
+  NODE_ENV: "production"
+
+  # Postgres
+  POSTGRES_HOST: "postgres-service"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "resume_hub"
+
+  # Redis
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+
+  # MinIO
+  MINIO_ENDPOINT: "http://minio-service:9000"
+  MINIO_BUCKET_NAME: "resumes"
+
+  # TUS upload server
+  TUS_ENDPOINT: "http://tusd-service:8080/files/"
+
+  # Worker ports
+  METRICS_PORT: "9100" 
+  STATS_PORT: "3002"
+
+  # JWT expiry (non-sensitive)
+  JWT_EXPIRES_IN: "1d"
+
+  # Queue settings
+  QUEUE_CONCURRENCY: "3"
+  QUEUE_ATTEMPTS: "3"
+  QUEUE_BACKOFF_DELAY: "5000"
+  DB_POOL_MAX: "10"
