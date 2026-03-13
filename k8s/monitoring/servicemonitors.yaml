@@ -1,0 +1,42 @@
+# SERVICEMONITORS
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: worker-ocr-monitor
+  namespace: resume-hub
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: worker-ocr
+      monitor: "true"
+  endpoints:
+    - port: metrics          
+      path: /metrics
+      interval: 15s
+  namespaceSelector:
+    matchNames:
+      - resume-hub
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: worker-stats-monitor
+  namespace: resume-hub
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: worker-stats
+      monitor: "true"
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+  namespaceSelector:
+    matchNames:
+      - resume-hub

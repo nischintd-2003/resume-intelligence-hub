@@ -1,0 +1,100 @@
+# WORKER-NLP 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-nlp
+  namespace: resume-hub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker-nlp
+  template:
+    metadata:
+      labels:
+        app: worker-nlp
+    spec:
+      containers:
+        - name: worker-nlp
+          image: resume-hub/worker-nlp:latest
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: resume-hub-config
+            - secretRef:
+                name: resume-hub-secret
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+---
+# WORKER-MATCH — Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-match
+  namespace: resume-hub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker-match
+  template:
+    metadata:
+      labels:
+        app: worker-match
+    spec:
+      containers:
+        - name: worker-match
+          image: resume-hub/worker-match:latest
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: resume-hub-config
+            - secretRef:
+                name: resume-hub-secret
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+---
+# WORKER-INSIGHTS — Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-insights
+  namespace: resume-hub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker-insights
+  template:
+    metadata:
+      labels:
+        app: worker-insights
+    spec:
+      containers:
+        - name: worker-insights
+          image: resume-hub/worker-insights:latest
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: resume-hub-config
+            - secretRef:
+                name: resume-hub-secret
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"

@@ -1,0 +1,63 @@
+# WORKER-STATS
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-stats
+  namespace: resume-hub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker-stats
+  template:
+    metadata:
+      labels:
+        app: worker-stats
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3002"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: worker-stats
+          image: resume-hub/worker-stats:latest
+          imagePullPolicy: Never
+          ports:
+            - name: http
+              containerPort: 3002
+          envFrom:
+            - configMapRef:
+                name: resume-hub-config
+            - secretRef:
+                name: resume-hub-secret
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: worker-stats-service
+  namespace: resume-hub
+  labels:
+    app: worker-stats
+    monitor: "true"
+spec:
+  selector:
+    app: worker-stats
+  ports:
+    - name: http
+      port: 3002
+      targetPort: 3002
+  type: ClusterIP
