@@ -5,6 +5,7 @@ import { AppError } from '../../utils/AppError';
 import { RegisterInput, LoginInput, AuthResponseDTO } from './auth.dto';
 import { toAuthResponse } from './auth.mapper';
 import { config } from '@resume-hub/config';
+import { AUTH } from '../../config/constants';
 
 const expiresIn = config.jwt.expiresIn as SignOptions['expiresIn'];
 
@@ -20,7 +21,7 @@ export class AuthService {
     if (existingEmail) throw new AppError('Email is already registered', 409);
     if (existingUsername) throw new AppError('Username is already taken', 409);
 
-    const passwordHash = await bcrypt.hash(input.password, 10);
+    const passwordHash = await bcrypt.hash(input.password, AUTH.SALT_ROUNDS);
     const user = await this.repository.createUser(input.username, input.email, passwordHash);
 
     const token = jwt.sign({ id: user.id }, config.jwt.secret, { expiresIn });

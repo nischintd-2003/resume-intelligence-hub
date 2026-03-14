@@ -14,7 +14,7 @@ const app: Application = express();
 
 app.use(helmet());
 app.use(cors(corsConfig));
-app.use(express.json());
+app.use(express.json({ limit: '100kb' }));
 app.use(
   '/api',
   rateLimiter({
