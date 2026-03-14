@@ -3,10 +3,12 @@ import { jobController } from '../modules/job/job.controller';
 import { validate } from '../middlewares/validateRequest';
 import { requireAuth } from '../middlewares/requireAuth';
 import { CreateJobSchema, UpdateJobSchema } from '../modules/job/job.dto';
+import { apiLimiter } from '../middlewares/rateLimiter';
 
 const router: Router = Router();
 
 router.use(requireAuth);
+router.use(apiLimiter);
 
 router.post('/', validate(CreateJobSchema), jobController.createJob.bind(jobController));
 router.get('/', jobController.getJobs.bind(jobController));

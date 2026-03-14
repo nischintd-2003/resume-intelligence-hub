@@ -3,10 +3,12 @@ import { resumeController } from '../modules/resume/resume.controller';
 import { validate } from '../middlewares/validateRequest';
 import { requireAuth } from '../middlewares/requireAuth';
 import { CreateResumeSchema, GetResumesQuerySchema } from '../modules/resume/resume.dto';
+import { apiLimiter } from '../middlewares/rateLimiter';
 
 const router: Router = Router();
 
 router.use(requireAuth);
+router.use(apiLimiter);
 
 router.post(
   '/',

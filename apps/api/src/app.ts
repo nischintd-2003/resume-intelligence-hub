@@ -6,23 +6,13 @@ import path from 'path';
 import YAML from 'yamljs';
 import appRoutes from './routes/index';
 import { errorHandler } from './middlewares/errorHandler';
-import { rateLimiter } from './middlewares/rateLimiter';
 import { corsConfig } from './config/cors';
-import { RATE_LIMIT } from './config/constants';
 
 const app: Application = express();
 
 app.use(helmet());
 app.use(cors(corsConfig));
 app.use(express.json({ limit: '100kb' }));
-app.use(
-  '/api',
-  rateLimiter({
-    capacity: RATE_LIMIT.CAPACITY,
-    refillRate: RATE_LIMIT.REFILL_RATE,
-    blockDuration: RATE_LIMIT.BLOCK_DURATION,
-  }),
-);
 
 const swaggerPath = path.join(process.cwd(), 'src/docs/swagger.yaml');
 const swaggerDocument = YAML.load(swaggerPath);
