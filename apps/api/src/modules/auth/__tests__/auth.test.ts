@@ -1,10 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import request from 'supertest';
 import app from '../../../app';
-import * as authRepo from '../auth.repository';
+import { authRepository } from '../auth.repository';
 import bcrypt from 'bcrypt';
 
-// Intercept the repository and bcrypt
 vi.mock('../auth.repository');
 vi.mock('bcrypt');
 
@@ -32,12 +31,9 @@ describe('Auth Module Integration', () => {
     });
 
     it('should register a new user successfully', async () => {
-      // Mock the DB returning null (user does not exist)
-      vi.mocked(authRepo.findUserByEmail).mockResolvedValue(null);
-      vi.mocked(authRepo.findUserByUsername).mockResolvedValue(null);
-      // Mock the DB creating a user
-      vi.mocked(authRepo.createUser).mockResolvedValue(mockUser as any);
-      // Mock bcrypt
+      vi.mocked(authRepository.findUserByEmail).mockResolvedValue(null);
+      vi.mocked(authRepository.findUserByUsername).mockResolvedValue(null);
+      vi.mocked(authRepository.createUser).mockResolvedValue(mockUser as any);
       vi.mocked(bcrypt.hash).mockResolvedValue('hashed_password' as never);
 
       const response = await request(app).post('/api/auth/register').send({
@@ -52,8 +48,7 @@ describe('Auth Module Integration', () => {
     });
 
     it('should return 409 if email is already registered', async () => {
-      // Mock the DB finding an existing user
-      vi.mocked(authRepo.findUserByEmail).mockResolvedValue(mockUser as any);
+      vi.mocked(authRepository.findUserByEmail).mockResolvedValue(mockUser as any);
 
       const response = await request(app).post('/api/auth/register').send({
         username: 'newuser',

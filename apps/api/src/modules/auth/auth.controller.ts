@@ -1,13 +1,19 @@
 import { Request, Response } from 'express';
-import * as authService from './auth.service';
+import { AuthService, authService } from './auth.service';
 import { LoginInput, RegisterInput } from './auth.dto';
 
-export const register = async (req: Request<unknown, unknown, RegisterInput>, res: Response) => {
-  const result = await authService.registerUser(req.body);
-  res.status(201).json({ status: 'success', data: result });
-};
+export class AuthController {
+  constructor(private readonly service: AuthService) {}
 
-export const login = async (req: Request<unknown, unknown, LoginInput>, res: Response) => {
-  const result = await authService.loginUser(req.body);
-  res.status(200).json({ status: 'success', data: result });
-};
+  async register(req: Request<unknown, unknown, RegisterInput>, res: Response): Promise<void> {
+    const result = await this.service.registerUser(req.body);
+    res.status(201).json({ status: 'success', data: result });
+  }
+
+  async login(req: Request<unknown, unknown, LoginInput>, res: Response): Promise<void> {
+    const result = await this.service.loginUser(req.body);
+    res.status(200).json({ status: 'success', data: result });
+  }
+}
+
+export const authController = new AuthController(authService);
