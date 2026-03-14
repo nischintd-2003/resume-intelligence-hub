@@ -153,7 +153,7 @@ paths:
         '200':
           description: Server is operational
 
-  /api/auth/register:
+  /api/v1/auth/register:
     post:
       summary: Register a new user
       tags:
@@ -190,7 +190,7 @@ paths:
         '409':
           description: Conflict (Email or Username taken)
 
-  /api/auth/login:
+  /api/v1/auth/login:
     post:
       summary: Login
       tags:
@@ -221,7 +221,7 @@ paths:
         '401':
           description: Invalid credentials
 
-  /api/resumes:
+  /api/v1/resumes:
       post:
         summary: Register an uploaded resume
         tags:
@@ -306,7 +306,7 @@ paths:
           '401':
             description: Unauthorized
 
-  /api/resumes/{id}:
+  /api/v1/resumes/{id}:
     get:
       summary: Get a specific resume
       tags:
@@ -337,7 +337,7 @@ paths:
         '401':
           description: Unauthorized
 
-  /api/resumes/{id}/matches:
+  /api/v1/resumes/{id}/matches:
       get:
         summary: Get all job matches for a specific resume
         tags:
@@ -370,7 +370,7 @@ paths:
           '401':
             description: Unauthorized 
 
-  /api/jobs:
+  /api/v1/jobs:
       post:
         summary: Create a target job role
         tags:
@@ -435,7 +435,7 @@ paths:
                       items:
                         $ref: '#/components/schemas/JobResponse'
 
-  /api/jobs/{id}:
+  /api/v1/jobs/{id}:
     get:
       summary: Get a specific job
       tags:
@@ -512,7 +512,7 @@ paths:
           description: Job not found or access denied
 
 
-  /api/analytics/dashboard:
+  /api/v1/analytics/dashboard:
       get:
         summary: Get summary analytics for the dashboard
         tags:
