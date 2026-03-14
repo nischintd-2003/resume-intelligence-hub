@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
 import app from '../../../app';
-import * as analyticsRepo from '../analytics.repository';
+import { analyticsRepository } from '../analytics.repository';
 import { config } from '@resume-hub/config';
 
 vi.mock('../analytics.repository');
@@ -32,7 +32,7 @@ describe('Analytics Module Integration', () => {
     });
 
     it('should return a blank slate if no analytics exist for the user', async () => {
-      vi.mocked(analyticsRepo.findDashboardByUserId).mockResolvedValue(null);
+      vi.mocked(analyticsRepository.findDashboardByUserId).mockResolvedValue(null);
 
       const response = await request(app)
         .get('/api/analytics/dashboard')
@@ -44,7 +44,7 @@ describe('Analytics Module Integration', () => {
     });
 
     it('should return the user dashboard analytics', async () => {
-      vi.mocked(analyticsRepo.findDashboardByUserId).mockResolvedValue(mockAnalytics as any);
+      vi.mocked(analyticsRepository.findDashboardByUserId).mockResolvedValue(mockAnalytics as any);
 
       const response = await request(app)
         .get('/api/analytics/dashboard')

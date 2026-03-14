@@ -1,5 +1,9 @@
 import { DashboardAnalytics } from '@resume-hub/database';
 
-export const findDashboardByUserId = async (userId: string) => {
-  return await DashboardAnalytics.findOne({ where: { userId } });
-};
+export class AnalyticsRepository {
+  async findDashboardByUserId(userId: string) {
+    return DashboardAnalytics.findOne({ where: { userId } });
+  }
+}
+
+export const analyticsRepository = new AnalyticsRepository();
