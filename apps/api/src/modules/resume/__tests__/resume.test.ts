@@ -2,11 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
 import app from '../../../app';
-import * as resumeRepo from '../resume.repository';
+import { resumeRepository } from '../resume.repository';
 import { config } from '@resume-hub/config';
 
-// Intercept the database
+// Intercept the database and queue
 vi.mock('../resume.repository');
+vi.mock('@resume-hub/queue-lib');
 
 describe('Resume Module Integration', () => {
   const mockUserId = 'user-123';
@@ -54,7 +55,7 @@ describe('Resume Module Integration', () => {
     });
 
     it('should create a resume record successfully', async () => {
-      vi.mocked(resumeRepo.createResumeRecord).mockResolvedValue(mockResume as any);
+      vi.mocked(resumeRepository.createResumeRecord).mockResolvedValue(mockResume as any);
 
       const response = await request(app)
         .post('/api/resumes')
@@ -65,13 +66,16 @@ describe('Resume Module Integration', () => {
       expect(response.body.data.minioPath).toBe('files/test.pdf');
 
       // Prove that the exact user ID from the token was passed to the DB layer
-      expect(resumeRepo.createResumeRecord).toHaveBeenCalledWith(mockUserId, 'files/test.pdf');
+      expect(resumeRepository.createResumeRecord).toHaveBeenCalledWith(
+        mockUserId,
+        'files/test.pdf',
+      );
     });
   });
 
   describe('GET /api/resumes', () => {
     it('should return a paginated list of resumes for the authenticated user', async () => {
-      vi.mocked(resumeRepo.findResumesByUser).mockResolvedValue({
+      vi.mocked(resumeRepository.findResumesByUser).mockResolvedValue({
         rows: [mockResume],
         count: 1,
       } as any);
@@ -83,7 +87,6 @@ describe('Resume Module Integration', () => {
       expect(response.status).toBe(200);
       expect(response.body.data).toBeInstanceOf(Array);
       expect(response.body.data[0].id).toBe(mockResumeId);
-
       expect(response.body.meta.totalItems).toBe(1);
       expect(response.body.meta.currentPage).toBe(1);
     });
@@ -91,8 +94,7 @@ describe('Resume Module Integration', () => {
 
   describe('GET /api/resumes/:id', () => {
     it('should return 404 if resume does not exist or belongs to someone else', async () => {
-      // Mock the DB returning null (simulating a foreign ID or non-existent record)
-      vi.mocked(resumeRepo.findResumeByIdAndUser).mockResolvedValue(null);
+      vi.mocked(resumeRepository.findResumeByIdAndUser).mockResolvedValue(null);
 
       const response = await request(app)
         .get('/api/resumes/foreign-id-999')
@@ -103,7 +105,7 @@ describe('Resume Module Integration', () => {
     });
 
     it('should return the resume if it belongs to the user', async () => {
-      vi.mocked(resumeRepo.findResumeByIdAndUser).mockResolvedValue(mockResume as any);
+      vi.mocked(resumeRepository.findResumeByIdAndUser).mockResolvedValue(mockResume as any);
 
       const response = await request(app)
         .get(`/api/resumes/${mockResumeId}`)
@@ -116,7 +118,7 @@ describe('Resume Module Integration', () => {
 
   describe('GET /api/resumes/:id/matches', () => {
     it('should return 404 if resume does not exist or belongs to someone else', async () => {
-      vi.mocked(resumeRepo.findResumeByIdAndUser).mockResolvedValue(null);
+      vi.mocked(resumeRepository.findResumeByIdAndUser).mockResolvedValue(null);
 
       const response = await request(app)
         .get('/api/resumes/foreign-id-999/matches')
@@ -127,7 +129,7 @@ describe('Resume Module Integration', () => {
     });
 
     it('should return the match results if the resume belongs to the user', async () => {
-      vi.mocked(resumeRepo.findResumeByIdAndUser).mockResolvedValue(mockResume as any);
+      vi.mocked(resumeRepository.findResumeByIdAndUser).mockResolvedValue(mockResume as any);
 
       const mockMatches = [
         {
@@ -136,7 +138,7 @@ describe('Resume Module Integration', () => {
           jobRole: { title: 'iOS Engineer' },
         },
       ];
-      vi.mocked(resumeRepo.findMatchesByResumeId).mockResolvedValue(mockMatches as any[]);
+      vi.mocked(resumeRepository.findMatchesByResumeId).mockResolvedValue(mockMatches as any[]);
 
       const response = await request(app)
         .get(`/api/resumes/${mockResumeId}/matches`)
