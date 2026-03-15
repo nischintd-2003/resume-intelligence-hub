@@ -13,8 +13,8 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
       className={cn(
         'fixed top-0 left-0 h-screen z-30',
         'flex flex-col',
-        'bg-slate-900 text-white',
-        'border-r border-slate-800',
+        'bg-brand-sidebar text-white',
+        'border-r border-brand-sidebar-border',
         'transition-all duration-300 ease-in-out',
         collapsed ? 'w-[68px]' : 'w-60',
       )}
@@ -24,7 +24,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
         to={ROUTES.ANALYTICS}
         className={cn(
           'flex items-center gap-3 h-16 shrink-0 px-4',
-          'border-b border-slate-800',
+          'border-b border-brand-sidebar-border',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-slate-500',
           collapsed && 'justify-center px-0',
         )}
@@ -47,7 +47,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
       </nav>
 
       {/*  Footer */}
-      <div className="shrink-0 border-t border-slate-800 p-2 space-y-0.5">
+      <div className="shrink-0 border-t border-brand-sidebar-border p-2 space-y-0.5">
         {/* User info */}
         {!collapsed && user && (
           <div className="px-3 py-2 mb-1">
@@ -62,7 +62,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
           title={LAYOUT_COPY.LOGOUT}
           className={cn(
             'w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm',
-            'text-slate-400 hover:text-white hover:bg-slate-800',
+            'text-slate-400 hover:text-white hover:bg-brand-sidebar-hover',
             'transition-colors duration-150',
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500',
             collapsed && 'justify-center px-0',
@@ -79,7 +79,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
           aria-label={collapsed ? LAYOUT_COPY.EXPAND_SIDEBAR : LAYOUT_COPY.COLLAPSE_SIDEBAR}
           className={cn(
             'w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm',
-            'text-slate-500 hover:text-white hover:bg-slate-800',
+            'text-slate-500 hover:text-white hover:bg-brand-sidebar-hover',
             'transition-colors duration-150',
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500',
             collapsed && 'justify-center px-0',
@@ -115,7 +115,7 @@ function SidebarNavItem({ item, collapsed }: SidebarNavItemProps) {
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500',
           isActive
             ? 'bg-white/10 text-white'
-            : 'text-slate-400 hover:text-white hover:bg-slate-800/60',
+            : 'text-slate-400 hover:text-white hover:bg-brand-sidebar-hover/60',
           collapsed && 'justify-center px-0',
         )
       }

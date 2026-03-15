@@ -52,7 +52,7 @@ export default function JobsPage() {
             onClick={() => setPanelOpen(true)}
             className={cn(
               'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium',
-              'bg-slate-800 text-white hover:bg-slate-700 transition-colors',
+              'bg-brand-primary text-white hover:bg-brand-primary-hover transition-colors',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500',
             )}
           >
@@ -207,7 +207,7 @@ const JobCard = memo(function JobCard({ job }: { job: JobDTO }) {
             'transition-colors duration-200 ease-in-out',
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2',
             'disabled:cursor-not-allowed disabled:opacity-50',
-            job.isActive ? 'bg-slate-800' : 'bg-slate-200',
+            job.isActive ? 'bg-brand-primary' : 'bg-slate-200',
           )}
         >
           <span
@@ -366,7 +366,7 @@ function CreateJobPanel({ onClose }: { onClose: () => void }) {
             disabled={isPending}
             className={cn(
               'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium',
-              'bg-slate-800 text-white hover:bg-slate-700 transition-colors',
+              'bg-brand-primary text-white hover:bg-brand-primary-hover transition-colors',
               'disabled:opacity-50 disabled:cursor-not-allowed',
             )}
           >
@@ -422,7 +422,7 @@ function SkillTagInput({ skills, onChange, disabled, hasError }: SkillTagInputPr
       {skills.map((skill) => (
         <span
           key={skill}
-          className="inline-flex items-center gap-1 pl-2 pr-1 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-white"
+          className="inline-flex items-center gap-1 pl-2 pr-1 py-0.5 rounded-full text-xs font-medium bg-brand-primary text-white"
         >
           {skill}
           {!disabled && (
@@ -497,7 +497,7 @@ function EmptyState({ onNew }: { onNew: () => void }) {
       </div>
       <button
         onClick={onNew}
-        className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-slate-800 text-white hover:bg-slate-700 transition-colors"
+        className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-brand-primary text-white hover:bg-brand-primary-hover transition-colors"
       >
         <Plus className="w-3.5 h-3.5" aria-hidden="true" />
         Create first job

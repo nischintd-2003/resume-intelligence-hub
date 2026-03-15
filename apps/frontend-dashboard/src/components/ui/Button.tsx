@@ -5,7 +5,7 @@ import { cn } from '../../utils/cn';
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary:
-    'bg-slate-800 text-white hover:bg-slate-700 focus-visible:ring-slate-600 ' +
+    'bg-brand-primary text-white hover:bg-brand-primary-hover focus-visible:ring-brand-primary-ring ' +
     'disabled:bg-slate-400',
   secondary:
     'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 ' +

@@ -182,7 +182,7 @@ export default function RegisterPage() {
 function BrandPanel() {
   return (
     <aside
-      className="hidden lg:flex lg:w-[45%] xl:w-[42%] flex-col justify-between p-12 bg-slate-900 text-white relative overflow-hidden"
+      className="hidden lg:flex lg:w-[45%] xl:w-[42%] flex-col justify-between p-12 bg-brand-sidebar text-white relative overflow-hidden"
       aria-hidden="true"
     >
       {/* Decorative grid */}
