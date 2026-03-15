@@ -1,32 +1,25 @@
 import nlp from 'compromise';
 import * as chrono from 'chrono-node';
 import { logger } from '@resume-hub/logger';
-import { educationKeywords, KNOWN_SKILLS } from '../constants';
+import { educationKeywords } from '../constants';
+import { extractAndNormalizeSkills } from './normalizer';
 
 export const extractStructuredData = async (rawText: string, jobId: string) => {
   try {
-    logger.info(`[Job ${jobId}]  Running compromise + chrono-node NLP extraction...`);
+    logger.info(`[Job ${jobId}] Running compromise + chrono-node NLP extraction...`);
 
     const doc = nlp(rawText);
 
     // Extract Skills
-    const foundSkills = new Set<string>();
-    const normalizedText = rawText.toLowerCase();
+    const skills = extractAndNormalizeSkills(rawText);
 
-    KNOWN_SKILLS.forEach((skill) => {
-      // avoid partial matches
-      const regex = new RegExp(`\\b${skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-      if (regex.test(normalizedText)) {
-        foundSkills.add(skill);
-      }
-    });
+    logger.info(`[Job ${jobId}] Skills found (normalized): ${skills.join(', ') || 'none'}`);
 
-    // Extract Experience
+    // Extract Experience (organisations)
     const organizations = doc.organizations().out('array') as string[];
     const uniqueOrgs = [...new Set(organizations)].filter((org) => org.length > 2);
 
     // Extract Education
-
     const educationArr: string[] = [];
 
     doc.sentences().forEach((sentence) => {
@@ -41,7 +34,7 @@ export const extractStructuredData = async (rawText: string, jobId: string) => {
     const dateStrings = parsedDates.map((d) => d.text);
 
     const structuredData = {
-      skills: Array.from(foundSkills),
+      skills,
       experience: uniqueOrgs.length > 0 ? uniqueOrgs : ['No distinct organizations found'],
       education: educationArr.length > 0 ? educationArr : ['No distinct education found'],
       datesFound: dateStrings,
@@ -49,7 +42,7 @@ export const extractStructuredData = async (rawText: string, jobId: string) => {
 
     return structuredData;
   } catch (error) {
-    logger.error(`[Job ${jobId}]  NLP Extraction Failed:`, error);
+    logger.error(`[Job ${jobId}] NLP extraction failed:`, error);
     throw error;
   }
 };

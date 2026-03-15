@@ -31,7 +31,9 @@ export const KNOWN_SKILLS = [
   'swiftui',
   'flutter',
   'dart',
-];
+] as const;
+
+export type KnownSkill = (typeof KNOWN_SKILLS)[number];
 
 export const educationKeywords = [
   'university',
