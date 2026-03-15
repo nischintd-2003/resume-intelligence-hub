@@ -1,74 +1,113 @@
 import { createWorker, QUEUES, CalculateMatchJob, insightsQueue } from '@resume-hub/queue-lib';
 import { initDatabase, ParsedResume, JobRole, MatchResult } from '@resume-hub/database';
 import { logger } from '@resume-hub/logger';
-
-const calculateScore = (candidateSkills: string[], requiredSkills: string[]) => {
-  if (requiredSkills.length === 0) return { score: 100, matched: [], missing: [] };
-
-  const normalizedCandidate = new Set(candidateSkills.map((s) => s.toLowerCase().trim()));
-  const matched: string[] = [];
-  const missing: string[] = [];
-
-  requiredSkills.forEach((req) => {
-    const normalizedReq = req.toLowerCase().trim();
-    if (normalizedCandidate.has(normalizedReq)) {
-      matched.push(req);
-    } else {
-      missing.push(req);
-    }
-  });
-
-  const score = Math.round((matched.length / requiredSkills.length) * 100);
-  return { score, matched, missing };
-};
+import { calculateScore } from './utils/scorer';
 
 const startMatchWorker = async () => {
   try {
     await initDatabase();
 
     createWorker<CalculateMatchJob>(QUEUES.MATCH, async (job) => {
-      const { resumeId, userId } = job.data;
-      logger.info(`[Job ${job.id}] Caught Match Job for Resume: ${resumeId}`);
+      const { resumeId, jobId, userId } = job.data;
+      logger.info(
+        `[Job ${job.id}] Match job — resumeId=${resumeId ?? 'n/a'} jobId=${jobId ?? 'n/a'}`,
+      );
 
-      // Fetch the parsed resume
-      const resume = await ParsedResume.findOne({ where: { id: resumeId, userId } });
-      if (!resume || !resume.extractedData || !resume.extractedData.skills) {
-        throw new Error(`Resume ${resumeId} lacks parsed skills data.`);
+      if (resumeId && !jobId) {
+        await matchResumeAgainstAllJobs(job.id!, resumeId, userId);
+
+        await insightsQueue.add('generate-insights', { resumeId, userId });
+        logger.info(`[Job ${job.id}] Fired Insights event`);
+      } else if (jobId && !resumeId) {
+        await matchJobAgainstAllResumes(job.id!, jobId, userId);
+      } else {
+        throw new Error(
+          'Invalid CalculateMatchJob payload: supply either resumeId OR jobId, not both or neither.',
+        );
       }
-
-      const candidateSkills = resume.extractedData.skills;
-
-      // Fetch all active jobs
-      const activeJobs = await JobRole.findAll({ where: { isActive: true } });
-      logger.info(`[Job ${job.id}] Evaluating candidate against ${activeJobs.length} open roles.`);
-
-      // Compute and store match scores
-      for (const role of activeJobs) {
-        const { score, matched, missing } = calculateScore(candidateSkills, role.requiredSkills);
-
-        await MatchResult.upsert({
-          resumeId,
-          jobId: role.id,
-          score,
-          details: { matchedSkills: matched, missingSkills: missing },
-        });
-      }
-
-      logger.info(`[Job ${job.id}] Successfully matched resume against all active jobs.`);
-
-      await insightsQueue.add('generate-insights', {
-        resumeId,
-        userId,
-      });
-
-      logger.info(`[Job ${job.id}] Fired Insights event`);
     });
 
-    logger.info('Match Engine started and listening to "match-queue"');
+    logger.info('Match Engine started — listening on "match-queue"');
   } catch (error) {
     logger.error('Failed to start Match worker:', error);
     process.exit(1);
   }
+};
+
+const matchResumeAgainstAllJobs = async (
+  workerId: string,
+  resumeId: string,
+  userId: string,
+): Promise<void> => {
+  const resume = await ParsedResume.findOne({ where: { id: resumeId, userId } });
+
+  if (!resume?.extractedData?.skills?.length) {
+    throw new Error(`Resume ${resumeId} has no parsed skills — cannot match.`);
+  }
+
+  const candidateSkills: string[] = resume.extractedData.skills;
+  const activeJobs = await JobRole.findAll({ where: { userId, isActive: true } });
+
+  logger.info(
+    `[Job ${workerId}] Evaluating resume ${resumeId} against ${activeJobs.length} active roles`,
+  );
+
+  for (const role of activeJobs) {
+    const { score, matchedSkills, missingSkills } = calculateScore(
+      candidateSkills,
+      role.requiredSkills,
+    );
+
+    await MatchResult.upsert({
+      resumeId,
+      jobId: role.id,
+      score,
+      details: { matchedSkills, missingSkills },
+    });
+  }
+
+  logger.info(`[Job ${workerId}] Matched resume ${resumeId} against ${activeJobs.length} roles`);
+};
+
+const matchJobAgainstAllResumes = async (
+  workerId: string,
+  jobId: string,
+  userId: string,
+): Promise<void> => {
+  const jobRole = await JobRole.findOne({ where: { id: jobId, userId } });
+
+  if (!jobRole) {
+    throw new Error(`Job ${jobId} not found for user ${userId}`);
+  }
+
+  if (!jobRole.isActive) {
+    logger.info(`[Job ${workerId}] Job ${jobId} is inactive — skipping`);
+    return;
+  }
+
+  const parsedResumes = await ParsedResume.findAll({ where: { userId, status: 'parsed' } });
+
+  logger.info(
+    `[Job ${workerId}] Evaluating job ${jobId} against ${parsedResumes.length} parsed resumes`,
+  );
+
+  for (const resume of parsedResumes) {
+    const candidateSkills: string[] = resume.extractedData?.skills ?? [];
+
+    const { score, matchedSkills, missingSkills } = calculateScore(
+      candidateSkills,
+      jobRole.requiredSkills,
+    );
+
+    await MatchResult.upsert({
+      resumeId: resume.id,
+      jobId,
+      score,
+      details: { matchedSkills, missingSkills },
+    });
+  }
+
+  logger.info(`[Job ${workerId}] Matched job ${jobId} against ${parsedResumes.length} resumes`);
 };
 
 startMatchWorker();
