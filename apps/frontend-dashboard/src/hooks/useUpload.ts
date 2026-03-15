@@ -5,6 +5,7 @@ import { resumeService } from '../services/resume.service';
 import { UPLOAD_CONFIG, UPLOAD_COPY } from '../constants/upload.constants';
 import { getApiErrorMessage } from '../utils/errors';
 import type { UseUploadReturn } from '../types/response.types';
+import toast from 'react-hot-toast';
 
 function makeItem(file: File, status: UploadStatus, error?: string): UploadFileItem {
   return {
@@ -37,6 +38,9 @@ export function useUpload(): UseUploadReturn {
   const addFiles = useCallback((files: File[]) => {
     const newItems: UploadFileItem[] = files.map((file) => {
       const validationError = validateFile(file);
+      if (validationError) {
+        toast.error(`${file.name}: ${validationError}`);
+      }
       return makeItem(file, validationError ? 'error' : 'idle', validationError ?? undefined);
     });
     setItems((prev) => [...prev, ...newItems]);

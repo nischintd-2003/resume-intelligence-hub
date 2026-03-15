@@ -2,7 +2,6 @@ import { memo, useCallback, useRef, useState, type KeyboardEvent } from 'react';
 import { AlertCircle, Briefcase, Loader2, Plus, RefreshCw, Trash2, X } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { useJobs, useCreateJob, useDeleteJob, useToggleJob } from '../../hooks/useJobs';
-import { getApiErrorMessage } from '../../utils/errors';
 import type {
   JobDTO,
   CreateJobFormValues,
@@ -93,9 +92,7 @@ const JobCard = memo(function JobCard({ job }: { job: JobDTO }) {
 
   function handleDelete() {
     setDeleteError(null);
-    deleteJob(job.id, {
-      onError: (err) => setDeleteError(getApiErrorMessage(err)),
-    });
+    deleteJob(job.id);
   }
 
   function handleToggle() {
@@ -255,7 +252,6 @@ function CreateJobPanel({ onClose }: { onClose: () => void }) {
       { title: values.title.trim(), requiredSkills: values.requiredSkills },
       {
         onSuccess: onClose,
-        onError: (err) => setApiError(getApiErrorMessage(err)),
       },
     );
   }

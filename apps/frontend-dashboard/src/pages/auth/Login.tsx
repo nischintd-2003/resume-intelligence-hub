@@ -5,7 +5,6 @@ import { Button, FormField, Input, PasswordInput } from '../../components/ui';
 import { useLogin } from '../../hooks/useAuth';
 import { loginSchema, type LoginFormValues } from '../../validations/auth.schemas';
 import { AUTH_COPY } from '../../constants/auth.constants';
-import { getApiErrorMessage } from '../../utils/errors';
 
 //  Types
 
@@ -57,7 +56,6 @@ export default function LoginPage() {
 
     loginMutate(result.data, {
       onSuccess: () => navigate(from, { replace: true }),
-      onError: (err) => setApiError(getApiErrorMessage(err)),
     });
   }
 

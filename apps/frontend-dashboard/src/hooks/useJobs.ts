@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { jobService } from '../services/job.service';
 import type { JobDTO, CreateJobFormValues, ToggleJobInput } from '../types/job.types';
 import { JOB_QUERY_KEYS } from '../constants/job.constants';
+import toast from 'react-hot-toast';
+import { getApiErrorMessage } from '../utils/errors';
 
 // useJobs
 
@@ -22,6 +24,7 @@ export function useCreateJob() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: JOB_QUERY_KEYS.list() });
     },
+    onError: (err) => toast.error(getApiErrorMessage(err)),
   });
 }
 
@@ -49,6 +52,7 @@ export function useToggleJob() {
       if (context?.previous) {
         queryClient.setQueryData(JOB_QUERY_KEYS.list(), context.previous);
       }
+      toast.error('Failed to update job status');
     },
 
     onSettled: () => {
@@ -66,5 +70,6 @@ export function useDeleteJob() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: JOB_QUERY_KEYS.list() });
     },
+    onError: (err) => toast.error(getApiErrorMessage(err)),
   });
 }
