@@ -60,6 +60,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
         <button
           onClick={logout}
           title={LAYOUT_COPY.LOGOUT}
+          aria-label={LAYOUT_COPY.LOGOUT}
           className={cn(
             'w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm',
             'text-slate-400 hover:text-white hover:bg-brand-sidebar-hover',
@@ -107,6 +108,7 @@ function SidebarNavItem({ item, collapsed }: SidebarNavItemProps) {
   return (
     <NavLink
       to={item.path}
+      aria-label={collapsed ? item.label : undefined}
       title={collapsed ? item.label : undefined}
       className={({ isActive }) =>
         cn(
