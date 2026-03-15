@@ -15,8 +15,11 @@ const startMatchWorker = async () => {
 
       if (resumeId && !jobId) {
         await matchResumeAgainstAllJobs(job.id!, resumeId, userId);
-
-        await insightsQueue.add('generate-insights', { resumeId, userId });
+        await insightsQueue.add(
+          'generate-insights',
+          { resumeId, userId },
+          { jobId: `insights:${userId}` },
+        );
         logger.info(`[Job ${job.id}] Fired Insights event`);
       } else if (jobId && !resumeId) {
         await matchJobAgainstAllResumes(job.id!, jobId, userId);
@@ -34,6 +37,7 @@ const startMatchWorker = async () => {
   }
 };
 
+// one resume vs all active jobs for this user
 const matchResumeAgainstAllJobs = async (
   workerId: string,
   resumeId: string,
@@ -69,6 +73,7 @@ const matchResumeAgainstAllJobs = async (
   logger.info(`[Job ${workerId}] Matched resume ${resumeId} against ${activeJobs.length} roles`);
 };
 
+// one job vs all parsed resumes for this user
 const matchJobAgainstAllResumes = async (
   workerId: string,
   jobId: string,
