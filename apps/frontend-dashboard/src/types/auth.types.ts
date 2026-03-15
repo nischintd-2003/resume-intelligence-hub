@@ -23,6 +23,12 @@ export interface RegisterInput {
 export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  isValidating: boolean;
   login: (data: AuthResponseDTO) => void;
   logout: () => void;
+}
+
+export interface BootstrapResult {
+  user: User | null;
+  isAuthenticated: boolean;
 }
