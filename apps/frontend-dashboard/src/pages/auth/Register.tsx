@@ -5,6 +5,8 @@ import { Button, FormField, Input, PasswordInput } from '../../components/ui';
 import { useRegister } from '../../hooks/useAuth';
 import { registerSchema, type RegisterFormValues } from '../../validations/auth.schemas';
 import { AUTH_COPY } from '../../constants/auth.constants';
+import toast from 'react-hot-toast';
+import { getApiErrorMessage } from '@/utils/errors';
 
 // Types
 
@@ -62,6 +64,7 @@ export default function RegisterPage() {
 
     registerMutate(payload, {
       onSuccess: () => navigate('/dashboard', { replace: true }),
+      onError: (err) => toast.error(getApiErrorMessage(err)),
     });
   }
 
