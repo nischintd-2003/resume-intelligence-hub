@@ -14,7 +14,7 @@ export interface PaginatedResult<T> {
 
 //  Resume
 
-export type ResumeStatus = 'uploaded' | 'extracted' | 'parsed' | 'failed';
+export type ResumeStatus = 'uploaded' | 'ocr_processing' | 'extracted' | 'parsed' | 'failed';
 
 export interface ExtractedResumeData {
   skills: string[];
