@@ -8,7 +8,7 @@ import { JOB_QUERY_KEYS } from '../constants/job.constants';
 export function useJobs() {
   return useQuery({
     queryKey: JOB_QUERY_KEYS.list(),
-    queryFn: jobService.getAll,
+    queryFn: ({ signal }) => jobService.getAll({ signal }),
     staleTime: 30_000,
   });
 }

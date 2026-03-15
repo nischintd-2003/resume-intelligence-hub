@@ -11,9 +11,14 @@ export const resumeService = {
     return response.data.data;
   },
 
-  getPaginated: async (page = 1, limit = 10): Promise<PaginatedResult<ResumeDTO>> => {
+  getPaginated: async (
+    page = 1,
+    limit = 10,
+    { signal }: { signal?: AbortSignal } = {},
+  ): Promise<PaginatedResult<ResumeDTO>> => {
     const response = await api.get<PaginatedResumesResponse>(API_ENDPOINTS.RESUMES.BASE, {
       params: { page, limit },
+      signal,
     });
     return {
       data: response.data.data,
@@ -21,14 +26,20 @@ export const resumeService = {
     };
   },
 
-  getById: async (id: string): Promise<ResumeDTO> => {
-    const response = await api.get<ApiResponse<ResumeDTO>>(`${API_ENDPOINTS.RESUMES.BASE}/${id}`);
+  getById: async (id: string, { signal }: { signal?: AbortSignal } = {}): Promise<ResumeDTO> => {
+    const response = await api.get<ApiResponse<ResumeDTO>>(`${API_ENDPOINTS.RESUMES.BASE}/${id}`, {
+      signal,
+    });
     return response.data.data;
   },
 
-  getMatches: async (id: string): Promise<MatchResultDTO[]> => {
+  getMatches: async (
+    id: string,
+    { signal }: { signal?: AbortSignal } = {},
+  ): Promise<MatchResultDTO[]> => {
     const response = await api.get<ApiResponse<MatchResultDTO[]>>(
-      `${API_ENDPOINTS.RESUMES.BASE}/${id}/matches`,
+      API_ENDPOINTS.RESUMES.MATCHES(id),
+      { signal },
     );
     return response.data.data;
   },
