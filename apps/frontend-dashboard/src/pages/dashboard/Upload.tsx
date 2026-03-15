@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import {
   CheckCircle2,
   FileText,
@@ -6,7 +6,6 @@ import {
   RefreshCw,
   UploadCloud,
   X,
-  XCircle,
   AlertCircle,
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
@@ -194,7 +193,11 @@ function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
 
 //  FileRow
 
-function FileRow({ item, onRemove, onRetry }: FileRowProps & { onRetry: () => void }) {
+const FileRow = memo(function FileRow({
+  item,
+  onRemove,
+  onRetry,
+}: FileRowProps & { onRetry: () => void }) {
   return (
     <li className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3">
       {/* File icon */}
@@ -281,11 +284,11 @@ function FileRow({ item, onRemove, onRetry }: FileRowProps & { onRetry: () => vo
       )}
     </li>
   );
-}
+});
 
 // StatusBadge
 
-function StatusBadge({ status }: { status: UploadStatus }) {
+const StatusBadge = memo(function StatusBadge({ status }: { status: UploadStatus }) {
   return (
     <span
       className={cn(
@@ -296,20 +299,18 @@ function StatusBadge({ status }: { status: UploadStatus }) {
       {UPLOAD_COPY.STATUS[status.toUpperCase() as keyof typeof UPLOAD_COPY.STATUS]}
     </span>
   );
-}
+});
 
 //  StatusIcon
 
-function StatusIcon({ status }: { status: UploadStatus }) {
+const StatusIcon = memo(function StatusIcon({ status }: { status: UploadStatus }) {
   switch (status) {
     case 'uploading':
     case 'registering':
       return <Loader2 className="w-4 h-4 text-blue-500 animate-spin shrink-0" aria-hidden="true" />;
     case 'done':
       return <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" aria-hidden="true" />;
-    case 'error':
-      return <XCircle className="w-4 h-4 text-red-400 shrink-0" aria-hidden="true" />;
     default:
       return <AlertCircle className="w-4 h-4 text-slate-300 shrink-0" aria-hidden="true" />;
   }
-}
+});

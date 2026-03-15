@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import type { UploadFileItem, UploadStatus } from '../types/upload.types';
 import { tusUploadFile } from '../services/upload.service';
 import { resumeService } from '../services/resume.service';
@@ -94,8 +94,9 @@ export function useUpload(): UseUploadReturn {
     setItems((prev) => prev.filter((item) => item.status !== 'done'));
   }, []);
 
-  const isUploading = items.some(
-    (item) => item.status === 'uploading' || item.status === 'registering',
+  const isUploading = useMemo(
+    () => items.some((item) => item.status === 'uploading' || item.status === 'registering'),
+    [items],
   );
 
   const retryFile = useCallback(

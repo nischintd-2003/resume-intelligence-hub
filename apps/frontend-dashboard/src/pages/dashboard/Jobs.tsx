@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, type KeyboardEvent } from 'react';
+import { memo, useCallback, useRef, useState, type KeyboardEvent } from 'react';
 import { AlertCircle, Briefcase, Loader2, Plus, RefreshCw, Trash2, X } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { useJobs, useCreateJob, useDeleteJob, useToggleJob } from '../../hooks/useJobs';
@@ -84,7 +84,7 @@ export default function JobsPage() {
 
 // JobCard
 
-function JobCard({ job }: { job: JobDTO }) {
+const JobCard = memo(function JobCard({ job }: { job: JobDTO }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
@@ -221,7 +221,7 @@ function JobCard({ job }: { job: JobDTO }) {
       </div>
     </div>
   );
-}
+});
 
 // CreateJobPanel
 

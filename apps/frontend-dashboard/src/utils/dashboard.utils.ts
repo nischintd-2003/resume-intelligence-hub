@@ -48,3 +48,9 @@ export function formatDateAnalytics(iso: string): string {
     minute: '2-digit',
   });
 }
+
+export function getScoreStyle(score: number): { bar: string; text: string } {
+  if (score >= 70) return { bar: 'bg-green-500', text: 'text-green-600' };
+  if (score >= 40) return { bar: 'bg-amber-400', text: 'text-amber-600' };
+  return { bar: 'bg-red-400', text: 'text-red-500' };
+}
