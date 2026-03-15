@@ -98,5 +98,14 @@ export function useUpload(): UseUploadReturn {
     (item) => item.status === 'uploading' || item.status === 'registering',
   );
 
-  return { items, isUploading, addFiles, removeFile, startAll, clearDone };
+  const retryFile = useCallback(
+    (id: string) => {
+      const item = items.find((i) => i.id === id);
+      if (!item || item.status !== 'error') return;
+      uploadOne(item);
+    },
+    [items, uploadOne],
+  );
+
+  return { items, isUploading, addFiles, removeFile, retryFile, startAll, clearDone };
 }

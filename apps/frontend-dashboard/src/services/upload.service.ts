@@ -48,9 +48,8 @@ export function tusUploadFile(
       onSuccess(minioPath);
     },
 
-    onError(err: Error) {
+    onError() {
       if (aborted) return;
-      console.error('[TUS] upload error:', err);
       onError(UPLOAD_COPY.ERRORS.TUS_FAILED);
     },
   });
