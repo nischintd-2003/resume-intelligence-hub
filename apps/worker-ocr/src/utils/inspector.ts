@@ -1,9 +1,12 @@
+import fs from 'fs';
+
 export type SupportedFileType = 'pdf' | 'docx' | 'image' | 'unsupported';
 
-export const detectFileType = async (buffer: Buffer): Promise<SupportedFileType> => {
-  const { fileTypeFromBuffer } = await import('file-type');
+export const detectFileType = async (filePath: string): Promise<SupportedFileType> => {
+  const { fileTypeFromStream } = await import('file-type');
 
-  const type = await fileTypeFromBuffer(buffer);
+  const stream = fs.createReadStream(filePath, { end: 4096 });
+  const type = await fileTypeFromStream(stream);
 
   if (!type) return 'unsupported';
 
