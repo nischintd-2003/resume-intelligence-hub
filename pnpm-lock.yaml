@@ -365,18 +365,12 @@ importers:
       '@types/pdf-parse':
         specifier: ^1.1.5
         version: 1.1.5
-      '@vitest/coverage-v8':
-        specifier: ^4.1.0
-        version: 4.1.0(vitest@4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.11.0)(jiti@2.6.1)(jsdom@29.0.0(@noble/hashes@1.8.0))(tsx@4.21.0)(yaml@2.8.2))
       ts-node-dev:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@24.11.0)(typescript@5.9.3)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
-      vitest:
-        specifier: ^4.0.18
-        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.11.0)(jiti@2.6.1)(jsdom@29.0.0(@noble/hashes@1.8.0))(tsx@4.21.0)(yaml@2.8.2)
 
   apps/worker-stats:
     dependencies:
@@ -6552,20 +6546,6 @@ snapshots:
       std-env: 4.0.0
       tinyrainbow: 3.0.3
       vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.11.0)(jiti@1.21.7)(jsdom@29.0.0(@noble/hashes@1.8.0))(tsx@4.21.0)(yaml@2.8.2)
-
-  '@vitest/coverage-v8@4.1.0(vitest@4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.11.0)(jiti@2.6.1)(jsdom@29.0.0(@noble/hashes@1.8.0))(tsx@4.21.0)(yaml@2.8.2))':
-    dependencies:
-      '@bcoe/v8-coverage': 1.0.2
-      '@vitest/utils': 4.1.0
-      ast-v8-to-istanbul: 1.0.0
-      istanbul-lib-coverage: 3.2.2
-      istanbul-lib-report: 3.0.1
-      istanbul-reports: 3.2.0
-      magicast: 0.5.2
-      obug: 2.1.1
-      std-env: 4.0.0
-      tinyrainbow: 3.0.3
-      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.11.0)(jiti@2.6.1)(jsdom@29.0.0(@noble/hashes@1.8.0))(tsx@4.21.0)(yaml@2.8.2)
 
   '@vitest/expect@4.0.18':
     dependencies:
