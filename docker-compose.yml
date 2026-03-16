@@ -108,6 +108,16 @@ services:
     networks:
       - resume-net
 
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend-dashboard/Dockerfile
+      args:
+        VITE_API_URL: ""
+    networks:
+      - resume-net
+
   api:
       build:
         context: .
