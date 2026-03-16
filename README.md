@@ -13,6 +13,7 @@ Event-driven resume processing platform built as a **Turborepo monorepo**. Uploa
 | Dashboard — Analytics | ![Analytics](./docs/screenshots/analytics.png) |
 | Dashboard — Jobs | ![Jobs](./docs/screenshots/jobs.png) |
 | Dashboard — Resumes | ![Resumes](./docs/screenshots/resumes.png) |
+| Preview — Resumes | ![Resumes](./docs/screenshots/resume-preview.png) |
 | Dashboard — Upload | ![Upload](./docs/screenshots/upload.png) |
 | Match Score Panel | ![Matches](./docs/screenshots/matches.png) |
 
