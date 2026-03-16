@@ -26,7 +26,7 @@ describe('Resume Module Integration', () => {
   const mockResume = {
     id: mockResumeId,
     userId: mockUserId,
-    minioPath: 'resumes/john-doe-resume.pdf',
+    minioPath: 'files/72282d5d532664c1e1398b2f967f22fb',
     status: 'uploaded',
     extractedData: null,
     createdAt: new Date(),
@@ -60,7 +60,7 @@ describe('Resume Module Integration', () => {
       vi.mocked(resumeRepository.createResumeRecord).mockResolvedValue(mockResume);
       vi.mocked(ocrQueue.add).mockResolvedValue({ id: 'job-123' } as any);
 
-      const payload = { minioPath: 'resumes/john-doe-resume.pdf' };
+      const payload = { minioPath: 'files/72282d5d532664c1e1398b2f967f22fb' };
       const response = await request(app)
         .post('/api/v1/resumes')
         .set('Authorization', `Bearer ${validToken}`)
@@ -91,7 +91,7 @@ describe('Resume Module Integration', () => {
       const response = await request(app)
         .post('/api/v1/resumes')
         .set('Authorization', `Bearer ${validToken}`)
-        .send({ minioPath: 'resumes/john-doe-resume.pdf' });
+        .send({ minioPath: 'files/72282d5d532664c1e1398b2f967f22fb' });
 
       expect(response.status).toBe(500);
       expect(response.body.message).toContain('could not be queued');

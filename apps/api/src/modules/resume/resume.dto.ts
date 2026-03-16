@@ -4,8 +4,8 @@ export const CreateResumeSchema = z.object({
   body: z.object({
     minioPath: z
       .string()
-      .regex(/^resumes\/[a-zA-Z0-9-_]+\.(pdf|docx|png|jpg)$/, 'Invalid file path structure')
-      .min(1, 'MinIO path is required'),
+      .min(1, 'MinIO path is required')
+      .regex(/^(files\/|resumes\/)?[a-zA-Z0-9-_]+(\.[a-zA-Z0-9]+)?$/, 'Invalid MinIO path'),
   }),
 });
 
