@@ -17,6 +17,8 @@ export interface ExtractedResumeData {
   [key: string]: any;
 }
 
+export type ResumeStatus = 'uploaded' | 'ocr_processing' | 'extracted' | 'parsed' | 'failed';
+
 @Table({ tableName: 'parsed_resumes', timestamps: true })
 export class ParsedResume extends Model {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
@@ -34,10 +36,10 @@ export class ParsedResume extends Model {
 
   @Default('uploaded')
   @Column({
-    type: DataType.ENUM('uploaded', 'extracted', 'parsed', 'failed'),
+    type: DataType.ENUM('uploaded', 'ocr_processing', 'extracted', 'parsed', 'failed'),
     allowNull: false,
   })
-  declare status: string;
+  declare status: ResumeStatus;
 
   @Column({ type: DataType.JSONB, allowNull: true })
   declare extractedData: ExtractedResumeData;

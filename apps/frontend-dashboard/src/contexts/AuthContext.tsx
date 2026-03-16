@@ -1,25 +1,37 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import type { AuthContextType, AuthResponseDTO, User } from '../types/auth.types';
+import type { AuthContextType, AuthResponseDTO, BootstrapResult, User } from '../types/auth.types';
 import { authService } from '../services/auth.service';
 import { AUTH_STORAGE_KEYS } from '../constants/auth.constants';
+import { isTokenExpired } from '../utils/auth';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-function readUserFromStorage(): User | null {
+function bootstrapAuth(): BootstrapResult {
+  if (isTokenExpired()) {
+    localStorage.removeItem(AUTH_STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
+    return { user: null, isAuthenticated: false };
+  }
+
   const raw = localStorage.getItem(AUTH_STORAGE_KEYS.USER);
-  const token = localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN);
-  if (!raw || !token) return null;
+  if (!raw) return { user: null, isAuthenticated: false };
+
   try {
-    return JSON.parse(raw) as User;
+    const user = JSON.parse(raw) as User;
+    return { user, isAuthenticated: true };
   } catch {
-    return null;
+    return { user: null, isAuthenticated: false };
   }
 }
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(() => readUserFromStorage());
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => user !== null);
+  const [user, setUser] = useState<User | null>(() => bootstrapAuth().user);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    () => bootstrapAuth().isAuthenticated,
+  );
+
+  const isValidating = false;
 
   useEffect(() => {
     const handleUnauthorized = () => {
@@ -44,7 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, isValidating, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

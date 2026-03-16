@@ -1,10 +1,12 @@
 import { Router } from 'express';
-import * as analyticsController from '../modules/analytics/analytics.controller';
+import { analyticsController } from '../modules/analytics/analytics.controller';
 import { requireAuth } from '../middlewares/requireAuth';
+import { apiLimiter } from '../middlewares/rateLimiter';
 
 const router: Router = Router();
 
 router.use(requireAuth);
-router.get('/dashboard', analyticsController.getDashboard);
+router.use(apiLimiter);
+router.get('/dashboard', analyticsController.getDashboard.bind(analyticsController));
 
 export default router;

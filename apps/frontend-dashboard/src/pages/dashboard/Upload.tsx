@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import {
   CheckCircle2,
   FileText,
   Loader2,
+  RefreshCw,
   UploadCloud,
   X,
-  XCircle,
   AlertCircle,
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
@@ -22,7 +22,7 @@ export default function UploadPage() {
     document.title = UPLOAD_COPY.PAGE_TITLE;
   }, []);
 
-  const { items, isUploading, addFiles, removeFile, startAll, clearDone } = useUpload();
+  const { items, isUploading, addFiles, removeFile, retryFile, startAll, clearDone } = useUpload();
 
   const idleCount = items.filter((i) => i.status === 'idle').length;
   const doneCount = items.filter((i) => i.status === 'done').length;
@@ -57,7 +57,12 @@ export default function UploadPage() {
 
           <ul className="space-y-2.5">
             {items.map((item) => (
-              <FileRow key={item.id} item={item} onRemove={() => removeFile(item.id)} />
+              <FileRow
+                key={item.id}
+                item={item}
+                onRemove={() => removeFile(item.id)}
+                onRetry={() => retryFile(item.id)}
+              />
             ))}
           </ul>
         </section>
@@ -188,9 +193,11 @@ function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
 
 //  FileRow
 
-function FileRow({ item, onRemove }: FileRowProps) {
-  const canRemove = item.status === 'idle' || item.status === 'error';
-
+const FileRow = memo(function FileRow({
+  item,
+  onRemove,
+  onRetry,
+}: FileRowProps & { onRetry: () => void }) {
   return (
     <li className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3">
       {/* File icon */}
@@ -233,7 +240,34 @@ function FileRow({ item, onRemove }: FileRowProps) {
       </div>
 
       {/* Action / status icon */}
-      {canRemove ? (
+      {item.status === 'error' ? (
+        // retry + remove
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            onClick={onRetry}
+            aria-label={`${UPLOAD_COPY.ACTIONS.RETRY}: ${item.file.name}`}
+            className={cn(
+              'p-1 rounded text-blue-400 hover:text-blue-600',
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400',
+              'transition-colors',
+            )}
+          >
+            <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
+          </button>
+          <button
+            onClick={onRemove}
+            aria-label={`${UPLOAD_COPY.ACTIONS.REMOVE}: ${item.file.name}`}
+            className={cn(
+              'p-1 rounded text-slate-300 hover:text-slate-600',
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400',
+              'transition-colors',
+            )}
+          >
+            <X className="w-4 h-4" aria-hidden="true" />
+          </button>
+        </div>
+      ) : item.status === 'idle' ? (
+        // Idle state: remove only
         <button
           onClick={onRemove}
           aria-label={`${UPLOAD_COPY.ACTIONS.REMOVE}: ${item.file.name}`}
@@ -250,11 +284,11 @@ function FileRow({ item, onRemove }: FileRowProps) {
       )}
     </li>
   );
-}
+});
 
 // StatusBadge
 
-function StatusBadge({ status }: { status: UploadStatus }) {
+const StatusBadge = memo(function StatusBadge({ status }: { status: UploadStatus }) {
   return (
     <span
       className={cn(
@@ -265,20 +299,18 @@ function StatusBadge({ status }: { status: UploadStatus }) {
       {UPLOAD_COPY.STATUS[status.toUpperCase() as keyof typeof UPLOAD_COPY.STATUS]}
     </span>
   );
-}
+});
 
 //  StatusIcon
 
-function StatusIcon({ status }: { status: UploadStatus }) {
+const StatusIcon = memo(function StatusIcon({ status }: { status: UploadStatus }) {
   switch (status) {
     case 'uploading':
     case 'registering':
       return <Loader2 className="w-4 h-4 text-blue-500 animate-spin shrink-0" aria-hidden="true" />;
     case 'done':
       return <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" aria-hidden="true" />;
-    case 'error':
-      return <XCircle className="w-4 h-4 text-red-400 shrink-0" aria-hidden="true" />;
     default:
       return <AlertCircle className="w-4 h-4 text-slate-300 shrink-0" aria-hidden="true" />;
   }
-}
+});

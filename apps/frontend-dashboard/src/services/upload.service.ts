@@ -6,7 +6,8 @@ function deriveMinioPath(uploadUrl: string): string {
   try {
     const rawPath = new URL(uploadUrl).pathname.slice(1);
     const plusIdx = rawPath.indexOf('+');
-    return plusIdx !== -1 ? rawPath.slice(0, plusIdx) : rawPath;
+    const path = plusIdx !== -1 ? rawPath.slice(0, plusIdx) : rawPath;
+    return path;
   } catch {
     const marker = '/files/';
     const idx = uploadUrl.indexOf(marker);
@@ -48,9 +49,8 @@ export function tusUploadFile(
       onSuccess(minioPath);
     },
 
-    onError(err: Error) {
+    onError() {
       if (aborted) return;
-      console.error('[TUS] upload error:', err);
       onError(UPLOAD_COPY.ERRORS.TUS_FAILED);
     },
   });

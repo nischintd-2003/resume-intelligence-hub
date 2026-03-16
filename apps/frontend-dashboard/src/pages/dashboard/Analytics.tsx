@@ -15,7 +15,8 @@ import type {
   UniversityCount,
   StatCardProps,
 } from '../../types/analytics.types';
-import { formatDateAnalytics } from '../../utils/dashboard.utils';
+import { formatDateAnalytics, getScoreStyle } from '../../utils/dashboard.utils';
+import { memo } from 'react';
 
 export default function AnalyticsPage() {
   const { data, isLoading, isError, refetch, isFetching } = useAnalytics();
@@ -133,7 +134,13 @@ export default function AnalyticsPage() {
 
 // StatCard
 
-function StatCard({ icon: Icon, label, value, sub, truncate }: StatCardProps) {
+const StatCard = memo(function StatCard({
+  icon: Icon,
+  label,
+  value,
+  sub,
+  truncate,
+}: StatCardProps) {
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4 flex flex-col gap-2">
       <div className="flex items-center gap-2">
@@ -158,11 +165,11 @@ function StatCard({ icon: Icon, label, value, sub, truncate }: StatCardProps) {
       )}
     </div>
   );
-}
+});
 
 // SkillsChart
 
-function SkillsChart({ skills }: { skills: SkillCount[] }) {
+const SkillsChart = memo(function SkillsChart({ skills }: { skills: SkillCount[] }) {
   const max = skills[0]?.count ?? 1;
 
   return (
@@ -203,11 +210,15 @@ function SkillsChart({ skills }: { skills: SkillCount[] }) {
       )}
     </div>
   );
-}
+});
 
 // MatchAveragesChart
 
-function MatchAveragesChart({ averages }: { averages: MatchAverage[] }) {
+const MatchAveragesChart = memo(function MatchAveragesChart({
+  averages,
+}: {
+  averages: MatchAverage[];
+}) {
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5">
       <h3 className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-4">
@@ -222,11 +233,7 @@ function MatchAveragesChart({ averages }: { averages: MatchAverage[] }) {
         <ul className="space-y-3">
           {averages.map(({ jobTitle, averageScore }) => {
             const score = Math.round(averageScore);
-            const barColor =
-              score >= 70 ? 'bg-green-500' : score >= 40 ? 'bg-amber-400' : 'bg-red-400';
-            const scoreColor =
-              score >= 70 ? 'text-green-600' : score >= 40 ? 'text-amber-600' : 'text-red-500';
-
+            const { bar: barColor, text: scoreColor } = getScoreStyle(score);
             return (
               <li key={jobTitle}>
                 <div className="flex items-center justify-between mb-1">
@@ -253,11 +260,15 @@ function MatchAveragesChart({ averages }: { averages: MatchAverage[] }) {
       )}
     </div>
   );
-}
+});
 
 // UniversitiesTable
 
-function UniversitiesTable({ universities }: { universities: UniversityCount[] }) {
+const UniversitiesTable = memo(function UniversitiesTable({
+  universities,
+}: {
+  universities: UniversityCount[];
+}) {
   return (
     <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
       <div className="px-5 py-3 border-b border-slate-100 bg-slate-50">
@@ -291,7 +302,7 @@ function UniversitiesTable({ universities }: { universities: UniversityCount[] }
       </table>
     </div>
   );
-}
+});
 
 // EmptyState
 

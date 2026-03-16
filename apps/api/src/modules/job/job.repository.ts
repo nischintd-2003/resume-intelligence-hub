@@ -1,41 +1,37 @@
 import { JobRole } from '@resume-hub/database';
 import { CreateJobInput, UpdateJobInput } from './job.dto';
 
-export const createJobRecord = async (userId: string, data: CreateJobInput) => {
-  return await JobRole.create({
-    userId,
-    title: data.title,
-    requiredSkills: data.requiredSkills,
-  });
-};
+export class JobRepository {
+  async createJobRecord(userId: string, data: CreateJobInput) {
+    return JobRole.create({
+      userId,
+      title: data.title,
+      requiredSkills: data.requiredSkills,
+    });
+  }
 
-export const findJobsByUser = async (userId: string) => {
-  return await JobRole.findAll({
-    where: { userId },
-    order: [['createdAt', 'DESC']],
-  });
-};
+  async findJobsByUser(userId: string) {
+    return JobRole.findAll({
+      where: { userId },
+      order: [['createdAt', 'DESC']],
+    });
+  }
 
-export const findJobByIdAndUser = async (id: string, userId: string) => {
-  return await JobRole.findOne({
-    where: { id, userId },
-  });
-};
+  async findJobByIdAndUser(id: string, userId: string) {
+    return JobRole.findOne({ where: { id, userId } });
+  }
 
-export const updateJobRecord = async (
-  userId: string,
-  jobId: string,
-  updateData: UpdateJobInput,
-) => {
-  const [_affectedCount, [updatedJob]] = await JobRole.update(updateData, {
-    where: { id: jobId, userId },
-    returning: true,
-  });
-  return updatedJob || null;
-};
+  async updateJobRecord(userId: string, jobId: string, updateData: UpdateJobInput) {
+    const [_affectedCount, [updatedJob]] = await JobRole.update(updateData, {
+      where: { id: jobId, userId },
+      returning: true,
+    });
+    return updatedJob || null;
+  }
 
-export const deleteJobRecord = async (userId: string, jobId: string) => {
-  return await JobRole.destroy({
-    where: { id: jobId, userId },
-  });
-};
+  async deleteJobRecord(userId: string, jobId: string) {
+    return JobRole.destroy({ where: { id: jobId, userId } });
+  }
+}
+
+export const jobRepository = new JobRepository();

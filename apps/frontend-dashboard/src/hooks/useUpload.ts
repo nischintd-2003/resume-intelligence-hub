@@ -1,10 +1,11 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import type { UploadFileItem, UploadStatus } from '../types/upload.types';
 import { tusUploadFile } from '../services/upload.service';
 import { resumeService } from '../services/resume.service';
 import { UPLOAD_CONFIG, UPLOAD_COPY } from '../constants/upload.constants';
 import { getApiErrorMessage } from '../utils/errors';
 import type { UseUploadReturn } from '../types/response.types';
+import toast from 'react-hot-toast';
 
 function makeItem(file: File, status: UploadStatus, error?: string): UploadFileItem {
   return {
@@ -37,6 +38,9 @@ export function useUpload(): UseUploadReturn {
   const addFiles = useCallback((files: File[]) => {
     const newItems: UploadFileItem[] = files.map((file) => {
       const validationError = validateFile(file);
+      if (validationError) {
+        toast.error(`${file.name}: ${validationError}`);
+      }
       return makeItem(file, validationError ? 'error' : 'idle', validationError ?? undefined);
     });
     setItems((prev) => [...prev, ...newItems]);
@@ -94,9 +98,19 @@ export function useUpload(): UseUploadReturn {
     setItems((prev) => prev.filter((item) => item.status !== 'done'));
   }, []);
 
-  const isUploading = items.some(
-    (item) => item.status === 'uploading' || item.status === 'registering',
+  const isUploading = useMemo(
+    () => items.some((item) => item.status === 'uploading' || item.status === 'registering'),
+    [items],
   );
 
-  return { items, isUploading, addFiles, removeFile, startAll, clearDone };
+  const retryFile = useCallback(
+    (id: string) => {
+      const item = items.find((i) => i.id === id);
+      if (!item || item.status !== 'error') return;
+      uploadOne(item);
+    },
+    [items, uploadOne],
+  );
+
+  return { items, isUploading, addFiles, removeFile, retryFile, startAll, clearDone };
 }

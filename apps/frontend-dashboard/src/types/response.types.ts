@@ -11,6 +11,7 @@ export interface UseUploadReturn {
   isUploading: boolean;
   addFiles: (files: File[]) => void;
   removeFile: (id: string) => void;
+  retryFile: (id: string) => void;
   startAll: () => void;
   clearDone: () => void;
 }

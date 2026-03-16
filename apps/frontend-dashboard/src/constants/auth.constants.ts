@@ -1,3 +1,5 @@
+import type { LoginFormValues, RegisterFormValues } from '@/validations/auth.schemas';
+
 export const AUTH_STORAGE_KEYS = {
   TOKEN: 'token',
   USER: 'user',
@@ -50,3 +52,12 @@ export const AUTH_COPY = {
     GENERIC: 'Something went wrong. Please try again.',
   },
 } as const;
+
+export const LOGIN_INITIAL_VALUES: LoginFormValues = { email: '', password: '' };
+
+export const REGISTER_INITIAL_VALUES: RegisterFormValues = {
+  username: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+};

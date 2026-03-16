@@ -11,7 +11,7 @@ export interface StructureDataJob {
 }
 
 export interface CalculateMatchJob {
-  resumeId: string;
+  resumeId?: string;
   jobId?: string;
   userId: string;
 }

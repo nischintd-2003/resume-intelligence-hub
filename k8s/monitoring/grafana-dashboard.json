@@ -1,0 +1,180 @@
+{
+  "__comment": "GRAFANA DASHBOARD — Resume Hub Monitoring",
+  "__comment2": "Import this via: Grafana → + → Import → paste JSON",
+  "__comment3": "Or it auto-loads via the ConfigMap if prometheus-values.yaml is applied",
+  "title": "Resume Hub — OCR Worker Scaling",
+  "uid": "resume-hub-main",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "time": { "from": "now-30m", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "OCR Worker Pod Count (HPA)",
+      "description": "Watch this climb during stress test as HPA adds pods",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "kube_deployment_status_replicas_ready{namespace=\"resume-hub\", deployment=\"worker-ocr\"}",
+          "legendFormat": "Ready Pods"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 4 },
+              { "color": "red", "value": 8 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "OCR Worker CPU Usage (vs 70% HPA threshold)",
+      "description": "HPA fires new pods when this crosses 70%",
+      "type": "timeseries",
+      "gridPos": { "x": 6, "y": 0, "w": 18, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"resume-hub\", container=\"worker-ocr\"}[2m])) by (pod) * 100",
+          "legendFormat": "{{pod}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "custom": { "lineWidth": 2 }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "70% HPA threshold" },
+            "properties": [
+              { "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } },
+              { "id": "custom.lineStyle", "value": { "dash": [10, 10], "fill": "dash" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "title": "Jobs Processed / sec",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(ocr_jobs_processed_total[1m])) by (file_type)",
+          "legendFormat": "{{file_type}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps" }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Job Errors / sec",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(ocr_job_errors_total[1m])) by (reason)",
+          "legendFormat": "{{reason}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "color": { "fixedColor": "red", "mode": "fixed" } }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Job Processing Time (p50 / p90 / p99)",
+      "description": "How long OCR jobs are taking. Tesseract image jobs will be slowest.",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 16, "w": 24, "h": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(ocr_job_processing_time_seconds_bucket[5m])) by (le, file_type))",
+          "legendFormat": "p50 {{file_type}}"
+        },
+        {
+          "expr": "histogram_quantile(0.90, sum(rate(ocr_job_processing_time_seconds_bucket[5m])) by (le, file_type))",
+          "legendFormat": "p90 {{file_type}}"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(ocr_job_processing_time_seconds_bucket[5m])) by (le, file_type))",
+          "legendFormat": "p99 {{file_type}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      }
+    },
+    {
+      "id": 6,
+      "title": "OCR Queue Length",
+      "description": "Jobs waiting to be picked up. Grows during stress test, drains as HPA adds pods.",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 24, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "stats_ocr_queue_length",
+          "legendFormat": "Waiting"
+        },
+        {
+          "expr": "stats_ocr_active_jobs",
+          "legendFormat": "Active"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short", "min": 0 }
+      }
+    },
+    {
+      "id": 7,
+      "title": "Worker Memory Usage",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 24, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(container_memory_working_set_bytes{namespace=\"resume-hub\", container=\"worker-ocr\"}) by (pod)",
+          "legendFormat": "{{pod}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" }
+      }
+    },
+    {
+      "id": 8,
+      "title": "HPA Desired vs Current Replicas",
+      "description": "Desired leads Current — you can see HPA making decisions in real-time",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 32, "w": 24, "h": 8 },
+      "targets": [
+        {
+          "expr": "kube_horizontalpodautoscaler_status_desired_replicas{namespace=\"resume-hub\", horizontalpodautoscaler=\"worker-ocr-hpa\"}",
+          "legendFormat": "Desired"
+        },
+        {
+          "expr": "kube_horizontalpodautoscaler_status_current_replicas{namespace=\"resume-hub\", horizontalpodautoscaler=\"worker-ocr-hpa\"}",
+          "legendFormat": "Current"
+        },
+        {
+          "expr": "kube_horizontalpodautoscaler_spec_min_replicas{namespace=\"resume-hub\", horizontalpodautoscaler=\"worker-ocr-hpa\"}",
+          "legendFormat": "Min"
+        },
+        {
+          "expr": "kube_horizontalpodautoscaler_spec_max_replicas{namespace=\"resume-hub\", horizontalpodautoscaler=\"worker-ocr-hpa\"}",
+          "legendFormat": "Max"
+        }
+      ]
+    }
+  ]
+}

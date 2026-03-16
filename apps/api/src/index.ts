@@ -1,8 +1,7 @@
 import app from './app';
 import { initDatabase } from '@resume-hub/database';
 import { logger } from '@resume-hub/logger';
-
-const PORT = process.env.PORT || 3000;
+import { PORT } from './config/constants';
 
 const startServer = async () => {
   try {

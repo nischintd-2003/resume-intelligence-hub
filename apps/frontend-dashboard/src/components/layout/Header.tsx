@@ -55,7 +55,7 @@ export function Header({ sidebarCollapsed, mobileMenuOpen, onToggleMobileMenu }:
             aria-hidden="true"
             className={cn(
               'w-8 h-8 rounded-full',
-              'bg-slate-800 text-white',
+              'bg-brand-primary text-white',
               'flex items-center justify-center',
               'text-xs font-bold uppercase select-none',
             )}

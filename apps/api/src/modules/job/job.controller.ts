@@ -1,42 +1,42 @@
 import { Request, Response } from 'express';
-import * as jobService from './job.service';
+import { JobService, jobService } from './job.service';
 import { CreateJobInput, UpdateJobInput } from './job.dto';
 
-export const createJob = async (req: Request<unknown, unknown, CreateJobInput>, res: Response) => {
-  const userId = req.user!.id;
-  const result = await jobService.createJobRole(userId, req.body);
-  res.status(201).json({ status: 'success', data: result });
-};
+export class JobController {
+  constructor(private readonly service: JobService) {}
 
-export const getJobs = async (req: Request, res: Response) => {
-  const userId = req.user!.id;
-  const result = await jobService.getUserJobs(userId);
-  res.status(200).json({ status: 'success', data: result });
-};
+  async createJob(req: Request<unknown, unknown, CreateJobInput>, res: Response): Promise<void> {
+    const userId = req.user!.id;
+    const result = await this.service.createJobRole(userId, req.body);
+    res.status(201).json({ status: 'success', data: result });
+  }
 
-export const getJob = async (req: Request<{ id: string }>, res: Response) => {
-  const userId = req.user!.id;
-  const jobId = req.params.id;
-  const result = await jobService.getJobById(userId, jobId);
-  res.status(200).json({ status: 'success', data: result });
-};
+  async getJobs(req: Request, res: Response): Promise<void> {
+    const userId = req.user!.id;
+    const result = await this.service.getUserJobs(userId);
+    res.status(200).json({ status: 'success', data: result });
+  }
 
-export const updateJob = async (
-  req: Request<{ id: string }, unknown, UpdateJobInput>,
-  res: Response,
-) => {
-  const userId = req.user!.id;
-  const jobId = req.params.id;
+  async getJob(req: Request<{ id: string }>, res: Response): Promise<void> {
+    const userId = req.user!.id;
+    const result = await this.service.getJobById(userId, req.params.id);
+    res.status(200).json({ status: 'success', data: result });
+  }
 
-  const result = await jobService.updateJobRole(userId, jobId, req.body);
+  async updateJob(
+    req: Request<{ id: string }, unknown, UpdateJobInput>,
+    res: Response,
+  ): Promise<void> {
+    const userId = req.user!.id;
+    const result = await this.service.updateJobRole(userId, req.params.id, req.body);
+    res.status(200).json({ status: 'success', data: result });
+  }
 
-  res.status(200).json({ status: 'success', data: result });
-};
+  async deleteJob(req: Request<{ id: string }>, res: Response): Promise<void> {
+    const userId = req.user!.id;
+    await this.service.deleteJobRole(userId, req.params.id);
+    res.status(204).send();
+  }
+}
 
-export const deleteJob = async (req: Request<{ id: string }>, res: Response) => {
-  const userId = req.user!.id;
-  const jobId = req.params.id;
-
-  await jobService.deleteJobRole(userId, jobId);
-  res.status(204).send();
-};
+export const jobController = new JobController(jobService);

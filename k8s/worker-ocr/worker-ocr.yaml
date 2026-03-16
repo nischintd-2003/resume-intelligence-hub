@@ -1,0 +1,96 @@
+# WORKER-OCR
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-ocr
+  namespace: resume-hub
+  labels:
+    app: worker-ocr
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: worker-ocr
+  template:
+    metadata:
+      labels:
+        app: worker-ocr
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9100"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: worker-ocr
+          image: resume-hub/worker-ocr:latest
+          imagePullPolicy: Never
+          ports:
+            - name: metrics
+              containerPort: 9100
+          envFrom:
+            - configMapRef:
+                name: resume-hub-config
+            - secretRef:
+                name: resume-hub-secret
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9100
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: worker-ocr-service
+  namespace: resume-hub
+  labels:
+    app: worker-ocr
+    monitor: "true"
+spec:
+  selector:
+    app: worker-ocr
+  ports:
+    - name: metrics
+      port: 9100
+      targetPort: 9100
+  type: ClusterIP
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: worker-ocr-hpa
+  namespace: resume-hub
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: worker-ocr
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Pods
+          value: 2          
+          periodSeconds: 30
+    scaleDown:
+      stabilizationWindowSeconds: 180

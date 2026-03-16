@@ -1,8 +1,14 @@
 import { Request, Response } from 'express';
-import * as analyticsService from './analytics.service';
+import { AnalyticsService, analyticsService } from './analytics.service';
 
-export const getDashboard = async (req: Request, res: Response) => {
-  const userId = req.user!.id;
-  const result = await analyticsService.getUserDashboard(userId);
-  res.status(200).json({ status: 'success', data: result });
-};
+export class AnalyticsController {
+  constructor(private readonly service: AnalyticsService) {}
+
+  async getDashboard(req: Request, res: Response): Promise<void> {
+    const userId = req.user!.id;
+    const result = await this.service.getUserDashboard(userId);
+    res.status(200).json({ status: 'success', data: result });
+  }
+}
+
+export const analyticsController = new AnalyticsController(analyticsService);

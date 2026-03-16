@@ -26,4 +26,5 @@ export interface DropZoneProps {
 export interface FileRowProps {
   item: UploadFileItem;
   onRemove: () => void;
+  onRetry: () => void;
 }

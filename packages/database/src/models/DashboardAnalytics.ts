@@ -1,4 +1,12 @@
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+  UpdatedAt,
+} from 'sequelize-typescript';
 import { User } from './User';
 
 @Table({ tableName: 'dashboard_analytics', timestamps: true })
@@ -24,4 +32,8 @@ export class DashboardAnalytics extends Model {
 
   @Column({ type: DataType.INTEGER, defaultValue: 0 })
   declare totalResumes: number;
+
+  @UpdatedAt
+  @Column(DataType.DATE)
+  declare updatedAt: Date;
 }

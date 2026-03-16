@@ -4,21 +4,10 @@ import { FileText } from 'lucide-react';
 import { Button, FormField, Input, PasswordInput } from '../../components/ui';
 import { useRegister } from '../../hooks/useAuth';
 import { registerSchema, type RegisterFormValues } from '../../validations/auth.schemas';
-import { AUTH_COPY } from '../../constants/auth.constants';
-import { getApiErrorMessage } from '../../utils/errors';
-
-// Types
-
-type FieldErrors = Partial<Record<keyof RegisterFormValues, string>>;
-
-// Initial State
-
-const INITIAL_VALUES: RegisterFormValues = {
-  username: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-};
+import { AUTH_COPY, REGISTER_INITIAL_VALUES } from '../../constants/auth.constants';
+import toast from 'react-hot-toast';
+import { getApiErrorMessage } from '@/utils/errors';
+import type { RegisterFieldErrors } from '@/types/auth.types';
 
 //  Component
 
@@ -26,8 +15,8 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const { mutate: registerMutate, isPending } = useRegister();
 
-  const [values, setValues] = useState<RegisterFormValues>(INITIAL_VALUES);
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [values, setValues] = useState<RegisterFormValues>(REGISTER_INITIAL_VALUES);
+  const [fieldErrors, setFieldErrors] = useState<RegisterFieldErrors>({});
   const [apiError, setApiError] = useState<string | null>(null);
 
   // Set page title
@@ -63,7 +52,7 @@ export default function RegisterPage() {
 
     registerMutate(payload, {
       onSuccess: () => navigate('/dashboard', { replace: true }),
-      onError: (err) => setApiError(getApiErrorMessage(err)),
+      onError: (err) => toast.error(getApiErrorMessage(err)),
     });
   }
 
@@ -182,7 +171,7 @@ export default function RegisterPage() {
 function BrandPanel() {
   return (
     <aside
-      className="hidden lg:flex lg:w-[45%] xl:w-[42%] flex-col justify-between p-12 bg-slate-900 text-white relative overflow-hidden"
+      className="hidden lg:flex lg:w-[45%] xl:w-[42%] flex-col justify-between p-12 bg-brand-sidebar text-white relative overflow-hidden"
       aria-hidden="true"
     >
       {/* Decorative grid */}

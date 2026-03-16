@@ -2,6 +2,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useAuthContext } from '../contexts/AuthContext';
 import { authService } from '../services/auth.service';
 import type { LoginInput, RegisterInput } from '../types/auth.types';
+import toast from 'react-hot-toast';
+import { getApiErrorMessage } from '../utils/errors';
 
 export function useLogin() {
   const { login } = useAuthContext();
@@ -11,6 +13,7 @@ export function useLogin() {
     onSuccess: (data) => {
       login(data);
     },
+    onError: (err) => toast.error(getApiErrorMessage(err)),
   });
 }
 
@@ -22,5 +25,6 @@ export function useRegister() {
     onSuccess: (data) => {
       login(data);
     },
+    onError: (err) => toast.error(getApiErrorMessage(err)),
   });
 }

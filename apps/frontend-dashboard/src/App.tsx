@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
@@ -6,6 +7,7 @@ import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { DashboardLayout } from './components/layout';
 import { ROUTES } from './constants/nav.constants';
 import PageLoader from './components/loading/PageLoader';
+import { TOAST_CONFIG } from './constants/ui.constants';
 
 // Auth Pages
 const LoginPage = lazy(() => import('./pages/auth/Login'));
@@ -62,6 +64,7 @@ function App() {
               <Route path="*" element={<Navigate to={ROUTES.ANALYTICS} replace />} />
             </Routes>
           </Suspense>
+          <Toaster position={TOAST_CONFIG.position} toastOptions={TOAST_CONFIG.options} />
         </BrowserRouter>
       </AuthProvider>
     </QueryClientProvider>

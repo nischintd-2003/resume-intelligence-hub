@@ -4,16 +4,10 @@ import { FileText } from 'lucide-react';
 import { Button, FormField, Input, PasswordInput } from '../../components/ui';
 import { useLogin } from '../../hooks/useAuth';
 import { loginSchema, type LoginFormValues } from '../../validations/auth.schemas';
-import { AUTH_COPY } from '../../constants/auth.constants';
-import { getApiErrorMessage } from '../../utils/errors';
-
-//  Types
-
-type FieldErrors = Partial<Record<keyof LoginFormValues, string>>;
-
-//  Initial State
-
-const INITIAL_VALUES: LoginFormValues = { email: '', password: '' };
+import { AUTH_COPY, LOGIN_INITIAL_VALUES } from '../../constants/auth.constants';
+import toast from 'react-hot-toast';
+import { getApiErrorMessage } from '@/utils/errors';
+import type { LoginFieldErrors } from '@/types/auth.types';
 
 //  Component
 
@@ -24,8 +18,8 @@ export default function LoginPage() {
 
   const { mutate: loginMutate, isPending } = useLogin();
 
-  const [values, setValues] = useState<LoginFormValues>(INITIAL_VALUES);
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [values, setValues] = useState<LoginFormValues>(LOGIN_INITIAL_VALUES);
+  const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});
   const [apiError, setApiError] = useState<string | null>(null);
 
   // Set page title
@@ -57,7 +51,7 @@ export default function LoginPage() {
 
     loginMutate(result.data, {
       onSuccess: () => navigate(from, { replace: true }),
-      onError: (err) => setApiError(getApiErrorMessage(err)),
+      onError: (err) => toast.error(getApiErrorMessage(err)),
     });
   }
 
@@ -143,7 +137,7 @@ export default function LoginPage() {
 function BrandPanel() {
   return (
     <aside
-      className="hidden lg:flex lg:w-[45%] xl:w-[42%] flex-col justify-between p-12 bg-slate-900 text-white relative overflow-hidden"
+      className="hidden lg:flex lg:w-[45%] xl:w-[42%] flex-col justify-between p-12 bg-brand-sidebar text-white relative overflow-hidden"
       aria-hidden="true"
     >
       {/* Decorative grid */}

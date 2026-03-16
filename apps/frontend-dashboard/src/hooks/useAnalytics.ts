@@ -8,7 +8,7 @@ export const ANALYTICS_QUERY_KEYS = {
 export function useAnalytics() {
   return useQuery({
     queryKey: ANALYTICS_QUERY_KEYS.dashboard(),
-    queryFn: analyticsService.getDashboard,
+    queryFn: ({ signal }) => analyticsService.getDashboard({ signal }),
     staleTime: 2 * 60 * 1000,
   });
 }

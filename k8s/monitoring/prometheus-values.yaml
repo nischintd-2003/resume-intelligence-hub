@@ -1,0 +1,52 @@
+# PROMETHEUS HELM VALUES
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+    scrapeInterval: "15s"
+    evaluationInterval: "15s"
+    retention: 7d
+
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "512Mi"
+      limits:
+        cpu: "500m"
+        memory: "1Gi"
+
+grafana:
+  enabled: true
+  adminPassword: "admin123" 
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: "resume-hub"
+          orgId: 1
+          folder: "Resume Hub"
+          type: file
+          disableDeletion: false
+          options:
+            path: /var/lib/grafana/dashboards/resume-hub
+
+  dashboardsConfigMaps:
+    resume-hub: "grafana-dashboard-cm"
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "300m"
+      memory: "512Mi"
+
+alertmanager:
+  enabled: false
+
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
