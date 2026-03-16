@@ -27,6 +27,7 @@ const EnvSchema = z.object({
   MINIO_ROOT_PASSWORD: z.string().default('password'),
   MINIO_ENDPOINT: z.string().default('http://localhost:9000'),
   MINIO_BUCKET_NAME: z.string().default('resumes'),
+  MINIO_PUBLIC_ENDPOINT: z.string().default('http://localhost:9000'),
 
   // Queue settings
   QUEUE_CONCURRENCY: z.coerce.number().default(5),
@@ -74,6 +75,7 @@ export const config = {
     secretKey: env.MINIO_ROOT_PASSWORD,
     endpoint: env.MINIO_ENDPOINT,
     bucket: env.MINIO_BUCKET_NAME,
+    publicEndpoint: env.MINIO_PUBLIC_ENDPOINT,
   },
   queue: {
     concurrency: env.QUEUE_CONCURRENCY,

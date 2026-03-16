@@ -63,6 +63,12 @@ export class ResumeService {
     const matches = await this.repository.findMatchesByResumeId(resumeId);
     return matches.map(toMatchResultResponse);
   }
+
+  async getResumePreviewUrl(userId: string, resumeId: string): Promise<string> {
+    const resume = await this.repository.findResumeByIdAndUser(resumeId, userId);
+    if (!resume) throw new AppError('Resume not found or access denied', 404);
+    return this.repository.getPresignedUrl(resume.minioPath);
+  }
 }
 
 export const resumeService = new ResumeService(resumeRepository);

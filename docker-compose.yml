@@ -130,6 +130,7 @@ services:
         - "3000:3000"
       environment:
         - NODE_ENV=production
+        - MINIO_PUBLIC_ENDPOINT=http://localhost:9000
         - POSTGRES_HOST=postgres
         - POSTGRES_USER=${POSTGRES_USER}
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

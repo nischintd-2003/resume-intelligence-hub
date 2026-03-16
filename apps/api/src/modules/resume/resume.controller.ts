@@ -36,6 +36,12 @@ export class ResumeController {
     const result = await this.service.getResumeMatches(userId, req.params.id);
     res.status(200).json({ status: 'success', data: result });
   }
+
+  async getPreviewUrl(req: Request<{ id: string }>, res: Response): Promise<void> {
+    const userId = req.user!.id;
+    const url = await this.service.getResumePreviewUrl(userId, req.params.id);
+    res.status(200).json({ status: 'success', data: { url } });
+  }
 }
 
 export const resumeController = new ResumeController(resumeService);
