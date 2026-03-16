@@ -22,7 +22,7 @@ const mockMatch: MatchResultDTO = {
   jobId: 'j1',
   score: 80,
   details: { matchedSkills: ['React'], missingSkills: ['Go'] },
-  JobRole: { id: 'j1', title: 'Frontend Engineer', isActive: true },
+  jobRole: { id: 'j1', title: 'Frontend Engineer', isActive: true },
 };
 
 const mockMeta = {

@@ -50,7 +50,7 @@ export interface MatchResultDTO {
   jobId: string;
   score: number;
   details: MatchDetails;
-  JobRole: JobRoleRef;
+  jobRole: JobRoleRef | null;
 }
 
 // Props

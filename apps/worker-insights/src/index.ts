@@ -67,6 +67,7 @@ const computeAndPersistAnalytics = async (userId: string, jobId: string): Promis
         topSkills: topSkills as any[],
         topUniversities: topUniversities as any[],
         matchAverages: matchAverages as any[],
+        updatedAt: new Date(),
       },
       { transaction: t },
     );
@@ -84,7 +85,9 @@ const enqueueForAllUsers = async (): Promise<void> => {
         'generate-insights',
         { resumeId: '', userId: user.id },
         {
-          jobId: `insights:${user.id}`,
+          jobId: `insights-${user.id}`,
+          removeOnComplete: true,
+          removeOnFail: true,
         },
       );
     }

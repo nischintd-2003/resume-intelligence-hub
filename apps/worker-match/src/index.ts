@@ -18,7 +18,7 @@ const startMatchWorker = async () => {
         await insightsQueue.add(
           'generate-insights',
           { resumeId, userId },
-          { jobId: `insights:${userId}` },
+          { jobId: `insights-${userId}`, removeOnComplete: true, removeOnFail: true },
         );
         logger.info(`[Job ${job.id}] Fired Insights event`);
       } else if (jobId && !resumeId) {

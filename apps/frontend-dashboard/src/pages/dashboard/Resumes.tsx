@@ -232,7 +232,7 @@ function MatchCard({ match }: { match: MatchResultDTO }) {
       {/* Job title + score */}
       <div className="flex items-start justify-between gap-2">
         <p className="text-xs font-semibold text-slate-700 leading-tight">
-          {match.JobRole?.title ?? 'Unknown Role'}
+          {match.jobRole?.title ?? 'Unknown Role'}
         </p>
         <span className={cn('text-sm font-bold shrink-0', scoreColor)}>{score}%</span>
       </div>

@@ -36,7 +36,7 @@ const mockMatch: MatchResultDTO = {
   jobId: 'j1',
   score: 80,
   details: { matchedSkills: ['react'], missingSkills: ['go'] },
-  JobRole: { id: 'j1', title: 'Frontend Engineer', isActive: true },
+  jobRole: { id: 'j1', title: 'Frontend Engineer', isActive: true },
 };
 
 function setupMocks(

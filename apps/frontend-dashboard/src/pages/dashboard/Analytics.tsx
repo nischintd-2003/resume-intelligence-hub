@@ -233,8 +233,7 @@ const MatchAveragesChart = memo(function MatchAveragesChart({
         <ul className="space-y-3">
           {averages.map(({ jobTitle, averageScore }) => {
             const score = Math.round(averageScore);
-            const barColor = getScoreStyle(score);
-            const scoreColor = getScoreStyle(score);
+            const { bar: barColor, text: scoreColor } = getScoreStyle(score);
             return (
               <li key={jobTitle}>
                 <div className="flex items-center justify-between mb-1">
