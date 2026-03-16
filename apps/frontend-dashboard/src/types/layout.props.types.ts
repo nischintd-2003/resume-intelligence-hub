@@ -9,6 +9,7 @@ export interface HeaderProps {
 export interface SidebarProps {
   collapsed: boolean;
   onToggleCollapse: () => void;
+  mobileOpen: boolean;
 }
 
 export interface SidebarNavItemProps {

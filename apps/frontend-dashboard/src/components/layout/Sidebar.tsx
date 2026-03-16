@@ -5,7 +5,7 @@ import { useAuthContext } from '../../contexts/AuthContext';
 import { NAV_ITEMS, LAYOUT_COPY, ROUTES } from '../../constants/nav.constants';
 import type { SidebarNavItemProps, SidebarProps } from '../../types/layout.props.types';
 
-export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
+export function Sidebar({ collapsed, onToggleCollapse, mobileOpen }: SidebarProps) {
   const { user, logout } = useAuthContext();
 
   return (
@@ -17,6 +17,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
         'border-r border-brand-sidebar-border',
         'transition-all duration-300 ease-in-out',
         collapsed ? 'w-[68px]' : 'w-60',
+        mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
       )}
     >
       {/*  Logo  */}

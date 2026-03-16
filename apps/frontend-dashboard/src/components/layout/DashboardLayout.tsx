@@ -46,14 +46,11 @@ export function DashboardLayout() {
       )}
 
       {/*  Sidebar */}
-      <div
-        className={cn(
-          'lg:block transition-transform duration-300',
-          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
-        )}
-      >
-        <Sidebar collapsed={collapsed} onToggleCollapse={handleToggleCollapse} />
-      </div>
+      <Sidebar
+        collapsed={collapsed}
+        onToggleCollapse={handleToggleCollapse}
+        mobileOpen={mobileOpen}
+      />
 
       {/*  Main area */}
       <div

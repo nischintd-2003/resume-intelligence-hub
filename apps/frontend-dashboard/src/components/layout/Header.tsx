@@ -14,12 +14,12 @@ export function Header({ sidebarCollapsed, mobileMenuOpen, onToggleMobileMenu }:
   return (
     <header
       className={cn(
-        'fixed top-0 right-0 z-20 h-16',
+        'fixed top-0 right-0 z-10 h-16',
         'flex items-center justify-between',
         'bg-white border-b border-slate-200',
         'px-4 sm:px-6',
         'transition-all duration-300 ease-in-out',
-        sidebarCollapsed ? 'left-[68px]' : 'left-0 lg:left-60',
+        sidebarCollapsed ? 'left-0 lg:left-[68px]' : 'left-0 lg:left-60',
       )}
     >
       {/* Left: Mobile menu button + Page title  */}
