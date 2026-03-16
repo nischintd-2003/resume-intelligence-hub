@@ -2,6 +2,10 @@
 
 Event-driven resume processing platform built as a **Turborepo monorepo**. Upload a PDF resume and the system automatically extracts text via OCR, parses skills and experience using NLP, matches against active job roles, and surfaces live analytics — all asynchronously through a BullMQ worker pipeline.
 
+## High Level Architecture
+
+| Architecture | ![Architecture](./docs/screenshots/high-level-architecture.png) |
+
 ## UI Preview
 
 | Login | ![Login](./docs/screenshots/login.png) |
@@ -11,10 +15,6 @@ Event-driven resume processing platform built as a **Turborepo monorepo**. Uploa
 | Dashboard — Resumes | ![Resumes](./docs/screenshots/resumes.png) |
 | Dashboard — Upload | ![Upload](./docs/screenshots/upload.png) |
 | Match Score Panel | ![Matches](./docs/screenshots/matches.png) |
-
-## High Level Architecture
-
-| Architecture | ![Architecture](./docs/screenshots/login.png) |
 
 ### Pipeline Flow
 
