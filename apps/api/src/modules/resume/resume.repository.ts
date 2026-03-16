@@ -1,4 +1,8 @@
 import { JobRole, MatchResult, ParsedResume } from '@resume-hub/database';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { config } from '@resume-hub/config';
+import { publicS3 } from '../../config/constants';
 
 export class ResumeRepository {
   async createResumeRecord(userId: string, minioPath: string) {
@@ -28,6 +32,16 @@ export class ResumeRepository {
       include: [{ model: JobRole, attributes: ['id', 'title', 'isActive'] }],
       order: [['score', 'DESC']],
     });
+  }
+
+  async getPresignedUrl(minioPath: string): Promise<string> {
+    const key = minioPath.replace(/^(files\/)?/, '');
+
+    const command = new GetObjectCommand({
+      Bucket: config.minio.bucket,
+      Key: key,
+    });
+    return getSignedUrl(publicS3, command, { expiresIn: 300 });
   }
 }
 

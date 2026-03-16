@@ -22,5 +22,6 @@ router.get(
 );
 router.get('/:id', resumeController.getResume.bind(resumeController));
 router.get('/:id/matches', resumeController.getMatches.bind(resumeController));
+router.get('/:id/preview', requireAuth, resumeController.getPreviewUrl.bind(resumeController));
 
 export default router;

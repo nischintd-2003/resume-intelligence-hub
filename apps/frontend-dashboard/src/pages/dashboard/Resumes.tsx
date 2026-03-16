@@ -10,14 +10,15 @@ import type {
   ResumeStatus,
   SkillGroupProps,
 } from '../../types/resume.types';
-import { STATUS_CLASSES, STATUS_LABELS } from '../../constants/resume.constants';
+import { LIMIT, STATUS_CLASSES, STATUS_LABELS, VISIBLE } from '../../constants/resume.constants';
 import { deriveFilename, formatDate } from '../../utils/dashboard.utils';
+import { ResumePreviewModal } from '@/components/resume/ResumePreviewModal';
 
 export default function ResumesPage() {
   const [page, setPage] = useState(1);
-  const LIMIT = 10;
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [previewId, setPreviewId] = useState<string | null>(null);
 
   const { data, isLoading, isError, refetch, isFetching } = useResumes(page, LIMIT);
 
@@ -97,6 +98,7 @@ export default function ResumesPage() {
                     resume={resume}
                     isSelected={selectedId === resume.id}
                     onClick={() => handleRowClick(resume.id)}
+                    onPreview={() => setPreviewId(resume.id)}
                   />
                 ))}
               </tbody>
@@ -116,15 +118,17 @@ export default function ResumesPage() {
           isFetching={isFetching}
         />
       )}
+      {/* Preview modal  */}
+      {previewId && <ResumePreviewModal resumeId={previewId} onClose={() => setPreviewId(null)} />}
     </div>
   );
 }
 
 // ResumeRow
 
-function ResumeRow({ resume, isSelected, onClick }: ResumeRowProps) {
+function ResumeRow({ resume, isSelected, onClick, onPreview }: ResumeRowProps) {
   const skills = resume.extractedData?.skills ?? [];
-  const VISIBLE = 4;
+
   const overflow = skills.length - VISIBLE;
 
   return (
@@ -175,6 +179,20 @@ function ResumeRow({ resume, isSelected, onClick }: ResumeRowProps) {
       {/* Date */}
       <td className="px-4 py-3 text-xs text-slate-400 hidden lg:table-cell whitespace-nowrap">
         {formatDate(resume.createdAt)}
+      </td>
+
+      {/* Preview */}
+      <td className="px-4 py-3">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onPreview();
+          }}
+          aria-label="Preview resume"
+          className="text-xs text-slate-400 hover:text-slate-600 underline underline-offset-2"
+        >
+          Preview
+        </button>
       </td>
     </tr>
   );

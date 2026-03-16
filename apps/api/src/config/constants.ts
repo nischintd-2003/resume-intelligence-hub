@@ -1,4 +1,5 @@
 import { config } from '@resume-hub/config';
+import { S3Client } from '@aws-sdk/client-s3';
 
 export const AUTH = {
   SALT_ROUNDS: 12,
@@ -49,3 +50,13 @@ export const RATE_LIMIT_CONSTANTS = {
   end
 `,
 };
+
+export const publicS3 = new S3Client({
+  region: 'us-east-1',
+  endpoint: config.minio.publicEndpoint,
+  credentials: {
+    accessKeyId: config.minio.accessKey,
+    secretAccessKey: config.minio.secretKey,
+  },
+  forcePathStyle: true,
+});

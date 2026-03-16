@@ -43,4 +43,11 @@ export const resumeService = {
     );
     return response.data.data;
   },
+
+  getPreviewUrl: async (id: string): Promise<string> => {
+    const response = await api.get<ApiResponse<{ url: string }>>(
+      `${API_ENDPOINTS.RESUMES.BASE}/${id}/preview`,
+    );
+    return response.data.data.url;
+  },
 };

@@ -22,3 +22,6 @@ export const STATUS_LABELS: Record<ResumeStatus, string> = {
   parsed: 'Parsed',
   failed: 'Failed',
 };
+
+export const LIMIT = 10;
+export const VISIBLE = 4;

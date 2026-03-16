@@ -59,6 +59,7 @@ export interface ResumeRowProps {
   resume: ResumeDTO;
   isSelected: boolean;
   onClick: () => void;
+  onPreview: () => void;
 }
 
 export interface MatchesPanelProps {
@@ -77,4 +78,9 @@ export interface PaginationProps {
   onPrev: () => void;
   onNext: () => void;
   isFetching: boolean;
+}
+
+export interface ResumePreviewModalProps {
+  resumeId: string;
+  onClose: () => void;
 }
