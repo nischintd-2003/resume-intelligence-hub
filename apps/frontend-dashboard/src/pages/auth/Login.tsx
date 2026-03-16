@@ -4,17 +4,10 @@ import { FileText } from 'lucide-react';
 import { Button, FormField, Input, PasswordInput } from '../../components/ui';
 import { useLogin } from '../../hooks/useAuth';
 import { loginSchema, type LoginFormValues } from '../../validations/auth.schemas';
-import { AUTH_COPY } from '../../constants/auth.constants';
+import { AUTH_COPY, LOGIN_INITIAL_VALUES } from '../../constants/auth.constants';
 import toast from 'react-hot-toast';
 import { getApiErrorMessage } from '@/utils/errors';
-
-//  Types
-
-type FieldErrors = Partial<Record<keyof LoginFormValues, string>>;
-
-//  Initial State
-
-const INITIAL_VALUES: LoginFormValues = { email: '', password: '' };
+import type { LoginFieldErrors } from '@/types/auth.types';
 
 //  Component
 
@@ -25,8 +18,8 @@ export default function LoginPage() {
 
   const { mutate: loginMutate, isPending } = useLogin();
 
-  const [values, setValues] = useState<LoginFormValues>(INITIAL_VALUES);
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [values, setValues] = useState<LoginFormValues>(LOGIN_INITIAL_VALUES);
+  const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});
   const [apiError, setApiError] = useState<string | null>(null);
 
   // Set page title

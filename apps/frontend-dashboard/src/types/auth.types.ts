@@ -1,3 +1,5 @@
+import type { LoginFormValues, RegisterFormValues } from '@/validations/auth.schemas';
+
 export interface User {
   id: string;
   username: string;
@@ -32,3 +34,7 @@ export interface BootstrapResult {
   user: User | null;
   isAuthenticated: boolean;
 }
+
+export type LoginFieldErrors = Partial<Record<keyof LoginFormValues, string>>;
+
+export type RegisterFieldErrors = Partial<Record<keyof RegisterFormValues, string>>;
