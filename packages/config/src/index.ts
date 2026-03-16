@@ -37,7 +37,10 @@ const EnvSchema = z.object({
   JWT_SECRET: z.string().min(10, 'JWT_SECRET must be at least 10 characters long'),
   JWT_EXPIRES_IN: z.string().default('1d'),
 
-  PORT: z.coerce.number().default(3000),
+  // PORT
+  API_PORT: z.coerce.number().default(3000),
+  METRICS_PORT: z.coerce.number().default(9100),
+  STATS_PORT: z.coerce.number().default(3002),
 });
 
 const parsedEnv = EnvSchema.safeParse(process.env);
@@ -82,7 +85,9 @@ export const config = {
     expiresIn: env.JWT_EXPIRES_IN,
   },
   server: {
-    port: env.PORT,
+    apiPort: env.API_PORT,
+    metricsPort: env.METRICS_PORT,
+    statsPort: env.STATS_PORT,
   },
 };
 

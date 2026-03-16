@@ -4,7 +4,7 @@ export const AUTH = {
   SALT_ROUNDS: 12,
 };
 
-export const PORT = config.server.port;
+export const PORT = config.server.apiPort;
 
 export const RATE_LIMIT_CONSTANTS = {
   TOKEN_BUCKET_SCRIPT: `

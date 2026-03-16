@@ -1,8 +1,9 @@
 import express from 'express';
 import { register } from './metrics';
 import { logger } from '@resume-hub/logger';
+import { config } from '@resume-hub/config';
 
-const METRICS_PORT = parseInt(process.env.METRICS_PORT ?? '9100', 10);
+const METRICS_PORT = config.server.metricsPort;
 
 export const startMetricsServer = () => {
   const app = express();

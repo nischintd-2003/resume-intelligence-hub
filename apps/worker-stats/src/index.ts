@@ -4,8 +4,9 @@ import { redisConnection, QUEUES } from '@resume-hub/queue-lib';
 import { initDatabase, ParsedResume } from '@resume-hub/database';
 import { logger } from '@resume-hub/logger';
 import { register, queueLength, activeJobs } from './metrics';
+import { config } from '@resume-hub/config';
 
-const PORT = parseInt(process.env.STATS_PORT ?? '3002', 10);
+const PORT = config.server.statsPort;
 const POLL_INTERVAL_MS = 10_000;
 
 const ocrQueue = new Queue(QUEUES.OCR, { connection: redisConnection });
